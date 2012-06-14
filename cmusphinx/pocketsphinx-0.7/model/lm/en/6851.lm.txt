@@ -1,0 +1,145 @@
+Language model created by QuickLM on Thu Feb 16 23:24:33 EST 2012
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 30 sentences and 32 words
+
+\data\
+ngram 1=32
+ngram 2=60
+ngram 3=30
+
+\1-grams:
+-0.7782 </s> -0.3010
+-0.7782 <s> -0.2218
+-2.2553 A -0.2218
+-2.2553 AND -0.2218
+-2.2553 AS -0.2218
+-2.2553 AT -0.2218
+-2.2553 BE -0.2218
+-2.2553 BUT -0.2218
+-2.2553 BY -0.2218
+-2.2553 DO -0.2218
+-2.2553 FOR -0.2218
+-2.2553 FROM -0.2218
+-2.2553 HAVE -0.2218
+-2.2553 HE -0.2218
+-2.2553 HER -0.2218
+-2.2553 HIS -0.2218
+-2.2553 I -0.2218
+-2.2553 IN -0.2218
+-2.2553 IT -0.2218
+-2.2553 NOT -0.2218
+-2.2553 OF -0.2218
+-2.2553 ON -0.2218
+-2.2553 SAY -0.2218
+-2.2553 SHE -0.2218
+-2.2553 THAT -0.2218
+-2.2553 THE -0.2218
+-2.2553 THEY -0.2218
+-2.2553 THIS -0.2218
+-2.2553 TO -0.2218
+-2.2553 WE -0.2218
+-2.2553 WITH -0.2218
+-2.2553 YOU -0.2218
+
+\2-grams:
+-1.7782 <s> A 0.0000
+-1.7782 <s> AND 0.0000
+-1.7782 <s> AS 0.0000
+-1.7782 <s> AT 0.0000
+-1.7782 <s> BE 0.0000
+-1.7782 <s> BUT 0.0000
+-1.7782 <s> BY 0.0000
+-1.7782 <s> DO 0.0000
+-1.7782 <s> FOR 0.0000
+-1.7782 <s> FROM 0.0000
+-1.7782 <s> HAVE 0.0000
+-1.7782 <s> HE 0.0000
+-1.7782 <s> HER 0.0000
+-1.7782 <s> HIS 0.0000
+-1.7782 <s> I 0.0000
+-1.7782 <s> IN 0.0000
+-1.7782 <s> IT 0.0000
+-1.7782 <s> NOT 0.0000
+-1.7782 <s> OF 0.0000
+-1.7782 <s> ON 0.0000
+-1.7782 <s> SAY 0.0000
+-1.7782 <s> SHE 0.0000
+-1.7782 <s> THAT 0.0000
+-1.7782 <s> THE 0.0000
+-1.7782 <s> THEY 0.0000
+-1.7782 <s> THIS 0.0000
+-1.7782 <s> TO 0.0000
+-1.7782 <s> WE 0.0000
+-1.7782 <s> WITH 0.0000
+-1.7782 <s> YOU 0.0000
+-0.3010 A </s> -0.3010
+-0.3010 AND </s> -0.3010
+-0.3010 AS </s> -0.3010
+-0.3010 AT </s> -0.3010
+-0.3010 BE </s> -0.3010
+-0.3010 BUT </s> -0.3010
+-0.3010 BY </s> -0.3010
+-0.3010 DO </s> -0.3010
+-0.3010 FOR </s> -0.3010
+-0.3010 FROM </s> -0.3010
+-0.3010 HAVE </s> -0.3010
+-0.3010 HE </s> -0.3010
+-0.3010 HER </s> -0.3010
+-0.3010 HIS </s> -0.3010
+-0.3010 I </s> -0.3010
+-0.3010 IN </s> -0.3010
+-0.3010 IT </s> -0.3010
+-0.3010 NOT </s> -0.3010
+-0.3010 OF </s> -0.3010
+-0.3010 ON </s> -0.3010
+-0.3010 SAY </s> -0.3010
+-0.3010 SHE </s> -0.3010
+-0.3010 THAT </s> -0.3010
+-0.3010 THE </s> -0.3010
+-0.3010 THEY </s> -0.3010
+-0.3010 THIS </s> -0.3010
+-0.3010 TO </s> -0.3010
+-0.3010 WE </s> -0.3010
+-0.3010 WITH </s> -0.3010
+-0.3010 YOU </s> -0.3010
+
+\3-grams:
+-0.3010 <s> A </s>
+-0.3010 <s> AND </s>
+-0.3010 <s> AS </s>
+-0.3010 <s> AT </s>
+-0.3010 <s> BE </s>
+-0.3010 <s> BUT </s>
+-0.3010 <s> BY </s>
+-0.3010 <s> DO </s>
+-0.3010 <s> FOR </s>
+-0.3010 <s> FROM </s>
+-0.3010 <s> HAVE </s>
+-0.3010 <s> HE </s>
+-0.3010 <s> HER </s>
+-0.3010 <s> HIS </s>
+-0.3010 <s> I </s>
+-0.3010 <s> IN </s>
+-0.3010 <s> IT </s>
+-0.3010 <s> NOT </s>
+-0.3010 <s> OF </s>
+-0.3010 <s> ON </s>
+-0.3010 <s> SAY </s>
+-0.3010 <s> SHE </s>
+-0.3010 <s> THAT </s>
+-0.3010 <s> THE </s>
+-0.3010 <s> THEY </s>
+-0.3010 <s> THIS </s>
+-0.3010 <s> TO </s>
+-0.3010 <s> WE </s>
+-0.3010 <s> WITH </s>
+-0.3010 <s> YOU </s>
+
+\end\

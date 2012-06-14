@@ -1,0 +1,145 @@
+Language model created by QuickLM on Fri Feb 17 01:28:03 EST 2012
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 30 sentences and 32 words
+
+\data\
+ngram 1=32
+ngram 2=60
+ngram 3=30
+
+\1-grams:
+-0.7782 </s> -0.3010
+-0.7782 <s> -0.2218
+-2.2553 ABOUT -0.2218
+-2.2553 AFTER -0.2218
+-2.2553 ASK -0.2218
+-2.2553 BAD -0.2218
+-2.2553 BE -0.2218
+-2.2553 DAY -0.2218
+-2.2553 EYE -0.2218
+-2.2553 FELL -0.2218
+-2.2553 FEW -0.2218
+-2.2553 FROM -0.2218
+-2.2553 GOOD -0.2218
+-2.2553 HAVE -0.2218
+-2.2553 LITTLE -0.2218
+-2.2553 LOOK -0.2218
+-2.2553 NEW -0.2218
+-2.2553 OF -0.2218
+-2.2553 ON -0.2218
+-2.2553 PERSON -0.2218
+-2.2553 PLACE -0.2218
+-2.2553 PROBLEM -0.2218
+-2.2553 RIGHT -0.2218
+-2.2553 SAME -0.2218
+-2.2553 TELL -0.2218
+-2.2553 TIME -0.2218
+-2.2553 TO -0.2218
+-2.2553 TRY -0.2218
+-2.2553 UP -0.2218
+-2.2553 USE -0.2218
+-2.2553 WANT -0.2218
+-2.2553 WORK -0.2218
+
+\2-grams:
+-1.7782 <s> ABOUT 0.0000
+-1.7782 <s> AFTER 0.0000
+-1.7782 <s> ASK 0.0000
+-1.7782 <s> BAD 0.0000
+-1.7782 <s> BE 0.0000
+-1.7782 <s> DAY 0.0000
+-1.7782 <s> EYE 0.0000
+-1.7782 <s> FELL 0.0000
+-1.7782 <s> FEW 0.0000
+-1.7782 <s> FROM 0.0000
+-1.7782 <s> GOOD 0.0000
+-1.7782 <s> HAVE 0.0000
+-1.7782 <s> LITTLE 0.0000
+-1.7782 <s> LOOK 0.0000
+-1.7782 <s> NEW 0.0000
+-1.7782 <s> OF 0.0000
+-1.7782 <s> ON 0.0000
+-1.7782 <s> PERSON 0.0000
+-1.7782 <s> PLACE 0.0000
+-1.7782 <s> PROBLEM 0.0000
+-1.7782 <s> RIGHT 0.0000
+-1.7782 <s> SAME 0.0000
+-1.7782 <s> TELL 0.0000
+-1.7782 <s> TIME 0.0000
+-1.7782 <s> TO 0.0000
+-1.7782 <s> TRY 0.0000
+-1.7782 <s> UP 0.0000
+-1.7782 <s> USE 0.0000
+-1.7782 <s> WANT 0.0000
+-1.7782 <s> WORK 0.0000
+-0.3010 ABOUT </s> -0.3010
+-0.3010 AFTER </s> -0.3010
+-0.3010 ASK </s> -0.3010
+-0.3010 BAD </s> -0.3010
+-0.3010 BE </s> -0.3010
+-0.3010 DAY </s> -0.3010
+-0.3010 EYE </s> -0.3010
+-0.3010 FELL </s> -0.3010
+-0.3010 FEW </s> -0.3010
+-0.3010 FROM </s> -0.3010
+-0.3010 GOOD </s> -0.3010
+-0.3010 HAVE </s> -0.3010
+-0.3010 LITTLE </s> -0.3010
+-0.3010 LOOK </s> -0.3010
+-0.3010 NEW </s> -0.3010
+-0.3010 OF </s> -0.3010
+-0.3010 ON </s> -0.3010
+-0.3010 PERSON </s> -0.3010
+-0.3010 PLACE </s> -0.3010
+-0.3010 PROBLEM </s> -0.3010
+-0.3010 RIGHT </s> -0.3010
+-0.3010 SAME </s> -0.3010
+-0.3010 TELL </s> -0.3010
+-0.3010 TIME </s> -0.3010
+-0.3010 TO </s> -0.3010
+-0.3010 TRY </s> -0.3010
+-0.3010 UP </s> -0.3010
+-0.3010 USE </s> -0.3010
+-0.3010 WANT </s> -0.3010
+-0.3010 WORK </s> -0.3010
+
+\3-grams:
+-0.3010 <s> ABOUT </s>
+-0.3010 <s> AFTER </s>
+-0.3010 <s> ASK </s>
+-0.3010 <s> BAD </s>
+-0.3010 <s> BE </s>
+-0.3010 <s> DAY </s>
+-0.3010 <s> EYE </s>
+-0.3010 <s> FELL </s>
+-0.3010 <s> FEW </s>
+-0.3010 <s> FROM </s>
+-0.3010 <s> GOOD </s>
+-0.3010 <s> HAVE </s>
+-0.3010 <s> LITTLE </s>
+-0.3010 <s> LOOK </s>
+-0.3010 <s> NEW </s>
+-0.3010 <s> OF </s>
+-0.3010 <s> ON </s>
+-0.3010 <s> PERSON </s>
+-0.3010 <s> PLACE </s>
+-0.3010 <s> PROBLEM </s>
+-0.3010 <s> RIGHT </s>
+-0.3010 <s> SAME </s>
+-0.3010 <s> TELL </s>
+-0.3010 <s> TIME </s>
+-0.3010 <s> TO </s>
+-0.3010 <s> TRY </s>
+-0.3010 <s> UP </s>
+-0.3010 <s> USE </s>
+-0.3010 <s> WANT </s>
+-0.3010 <s> WORK </s>
+
+\end\

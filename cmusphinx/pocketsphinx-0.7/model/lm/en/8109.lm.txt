@@ -1,0 +1,88 @@
+Language model created by QuickLM on Wed Feb 29 10:55:41 EST 2012
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 16 sentences and 18 words
+
+\data\
+ngram 1=18
+ngram 2=31
+ngram 3=16
+
+\1-grams:
+-0.7871 </s> -0.3010
+-0.7871 <s> -0.2236
+-1.9912 BEGIN -0.2236
+-1.9912 END -0.2236
+-1.9912 FINISH -0.2236
+-1.9912 FIVE -0.2236
+-1.9912 FOUR -0.2236
+-1.9912 GOOD -0.2966
+-1.9912 GOODBYE -0.2236
+-1.9912 HELLO -0.2236
+-1.9912 MORNING -0.2236
+-1.9912 NO -0.2236
+-1.9912 ONE -0.2236
+-1.9912 START -0.2236
+-1.9912 THREE -0.2236
+-1.9912 TWO -0.2236
+-1.9912 YES -0.2236
+-1.6902 ZERO -0.2236
+
+\2-grams:
+-1.5051 <s> BEGIN 0.0000
+-1.5051 <s> END 0.0000
+-1.5051 <s> FINISH 0.0000
+-1.5051 <s> FIVE 0.0000
+-1.5051 <s> FOUR 0.0000
+-1.5051 <s> GOOD 0.0000
+-1.5051 <s> GOODBYE 0.0000
+-1.5051 <s> HELLO 0.0000
+-1.5051 <s> NO 0.0000
+-1.5051 <s> ONE 0.0000
+-1.5051 <s> START 0.0000
+-1.5051 <s> THREE 0.0000
+-1.5051 <s> TWO 0.0000
+-1.5051 <s> YES 0.0000
+-1.2041 <s> ZERO 0.0000
+-0.3010 BEGIN </s> -0.3010
+-0.3010 END </s> -0.3010
+-0.3010 FINISH </s> -0.3010
+-0.3010 FIVE </s> -0.3010
+-0.3010 FOUR </s> -0.3010
+-0.3010 GOOD MORNING 0.0000
+-0.3010 GOODBYE </s> -0.3010
+-0.3010 HELLO </s> -0.3010
+-0.3010 MORNING </s> -0.3010
+-0.3010 NO </s> -0.3010
+-0.3010 ONE </s> -0.3010
+-0.3010 START </s> -0.3010
+-0.3010 THREE </s> -0.3010
+-0.3010 TWO </s> -0.3010
+-0.3010 YES </s> -0.3010
+-0.3010 ZERO </s> -0.3010
+
+\3-grams:
+-0.3010 <s> BEGIN </s>
+-0.3010 <s> END </s>
+-0.3010 <s> FINISH </s>
+-0.3010 <s> FIVE </s>
+-0.3010 <s> FOUR </s>
+-0.3010 <s> GOOD MORNING
+-0.3010 <s> GOODBYE </s>
+-0.3010 <s> HELLO </s>
+-0.3010 <s> NO </s>
+-0.3010 <s> ONE </s>
+-0.3010 <s> START </s>
+-0.3010 <s> THREE </s>
+-0.3010 <s> TWO </s>
+-0.3010 <s> YES </s>
+-0.3010 <s> ZERO </s>
+-0.3010 GOOD MORNING </s>
+
+\end\

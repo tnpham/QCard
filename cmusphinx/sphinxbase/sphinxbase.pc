@@ -1,0 +1,13 @@
+prefix=/Users/LQX/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+libs="-lpthread -lm  "
+
+Name: SphinxBase
+Description: Shared components for Sphinx speech recognition
+Version: 0.7
+URL: http://www.cmusphinx.org/
+Libs: -L${libdir} -lsphinxbase -lsphinxad
+Libs.private: ${libs}
+Cflags: -I${includedir} -I${includedir}/sphinxbase
