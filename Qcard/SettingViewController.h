@@ -13,14 +13,15 @@
 
 @interface SettingViewController : UIViewController{
     
-    IBOutlet UIImageView * imageView;
+    NSMutableArray *listOfItems;
+    //IBOutlet UIImageView * imageView;
     
 }
-
+/*
 @property (assign, nonatomic) IBOutlet UILabel * blockLabel;
 @property (assign, nonatomic) IBOutlet UILabel * notificationLabel;
 @property (assign, nonatomic) IBOutlet UILabel * wifiLabel;
-
+*/
 //@property (assign, nonatomic) IBOutlet UIImageView * image;
 
 @end

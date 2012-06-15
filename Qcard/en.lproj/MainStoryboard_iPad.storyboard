@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D50d" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="4hp-1r-FVd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="4hp-1r-FVd">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development defaultVersion="4200" identifier="xcode"/>
@@ -492,6 +492,72 @@
         <image name="oohoo.png" width="480" height="104"/>
         <image name="setting.png" width="256" height="256"/>
     </resources>
+    <classes>
+        <class className="AnswerViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AnswerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="goBack"/>
+                <relationship kind="outlet" name="lblANSWER" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="AuthenticateViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AuthenticateViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="authenticate:"/>
+                <relationship kind="action" name="checkBox:"/>
+                <relationship kind="action" name="recoverpass:"/>
+                <relationship kind="outlet" name="authenticate" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="checkBox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="password" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="recoverpass" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="servername" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="username" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SetupViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SetupViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="langButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="langlabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="pickerView" candidateClass="UIPickerView"/>
+                <relationship kind="outlet" name="setButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="setlabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="Pass:"/>
+                <relationship kind="action" name="resumeListeningButtonAction"/>
+                <relationship kind="action" name="startButtonAction"/>
+                <relationship kind="action" name="stopButtonAction"/>
+                <relationship kind="action" name="suspendListeningButtonAction"/>
+                <relationship kind="action" name="switch2answer"/>
+                <relationship kind="outlet" name="Pass" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="buttonANSWER" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="buttonCHECK1" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="buttonCHECK2" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="buttonCHECK3" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="fliteDbLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="heardTextView" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="imageView1" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imageView2" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imageView3" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="lblCORRECTNESS" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblDIFFICULTY" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblRIGHT" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblWORD" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblWRONG" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="pocketsphinxDbLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="resumeListeningButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="startButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="statusTextView" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="suspendListeningButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="totalWORDS" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

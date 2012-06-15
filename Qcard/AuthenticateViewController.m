@@ -24,7 +24,7 @@
 @synthesize servername;
 @synthesize authenticate;
 @synthesize recoverpass;
-
+@synthesize checkBox;
 @synthesize isChecked;
 //@synthesize loader;
 //@synthesize webData;
@@ -132,6 +132,8 @@
     }
 }
 
+
+
 //Checks if the username and password is valid
 - (IBAction) authenticate:(id)sender
 {
@@ -139,31 +141,6 @@
     //if ([username.text isEqualToString: @"%@"] && [password.text isEqualToString: @"%@"]){
     //Checks if the username and password is empty
     if (([username.text length] > 0) && ([password.text length] > 0) && ([servername.text length] > 0)){
-        
-        /*
-        //Reachability *reach = [Reachability reachabilityWithHostname: [NSString stringWithFormat:@"https://%@", servername.text]];
-        Reachability *reach = [Reachability reachabilityWithHostname:[NSURL URLWithString:@"https://129.128.136.143/moodle"]];
-        
-        reach.reachableBlock = ^(Reachability *reach)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"Reachable");
-                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Server Connected"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert1 show];
-            });
-        };
-        
-        reach.unreachableBlock = ^(Reachability *reach)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"Unreachable");
-                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Could not connect to server"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert1 show];
-            });
-        };
-        
-        [reach startNotifier];
-        */
 
         //loader.hidden = FALSE;
         //[loader startAnimating];
@@ -173,8 +150,11 @@
         //passes the username and password to the server php pages to check valid user
         //NSString *url = [NSString stringWithFormat:@"https://129.128.136.143/moodle/local/phpFile.php?user=%@&pass=%@", username.text, password.text];  // server name does not match
         
-        NSString *url = [NSString stringWithFormat:@"https://%@/moodle/local/phpFile.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
+        NSString *url = [NSString stringWithFormat:@"https://%@/moodle/local/qcardloader/phpFile.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
+
         NSURL *URL = [NSURL URLWithString:url];
+        
+        NSLog(@"%@", url);
         
         NSURLRequest *request = [NSURLRequest requestWithURL:URL];
         NSURLResponse *response;
@@ -200,21 +180,6 @@
         NSString *rval = [[NSString alloc]initWithData: data encoding:NSUTF8StringEncoding];
         NSLog(@"%@",rval);
         if ([rval isEqualToString: @"true"]){
-            /*
-            if (isChecked == 1){
-                
-                NSString *usernameField = [username  text];
-                NSString *passwordField = [password text];
-                NSString *serverField = [servername text];
-                
-                NSUserDefaults *defaultData = [NSUserDefaults standardUserDefaults];
-                
-                [defaultData setObject:usernameField forKey:@"username"];
-                [defaultData setObject:passwordField forKey:@"password"];
-                [defaultData setObject:serverField forKey:@"server"];
-                
-                [defaultData synchronize];
-            }*/
             
             //Changes to the next view
             [self performSegueWithIdentifier:@"validatedsegue" sender: self];
@@ -229,12 +194,7 @@
             NSLog(@"Invalid username or password");
             
             if (isChecked == 1){
-                /*
-                 [checkBox setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateNormal];
-                 [checkBox setSelected : YES];
-                 isChecked = 0;
-                 NSLog(@"Checked");
-                 */
+
                 NSLog(@"YAY");
                 NSString *usernameField = [username  text];
                 NSString *passwordField = [password text];
@@ -282,6 +242,7 @@
     }
     [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
+
 
 /*
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data

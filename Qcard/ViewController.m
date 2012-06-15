@@ -189,7 +189,7 @@ char* choppy( char *s )
     
     int i=0;
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"masterfile" ofType:@"txt"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"8109" ofType:@"txt"];
     NSString *string = [[NSString alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:NULL];
     
     NSArray *lines = [string componentsSeparatedByString:@"\n"]; // each line, adjust character for line endings
@@ -308,14 +308,14 @@ char* choppy( char *s )
 			}
 			counter++;
 		}
-          //****************************************************
+
         
         //Checks if array is nil and initializes it
         if (global.answerArray == nil)
         {
             global.answerArray = [[NSMutableArray alloc] init ];
         }
-        //****************************************************
+
         
         //Displayed word
         target[i] = strdup(result2);
@@ -344,7 +344,7 @@ char* choppy( char *s )
     
     
 
-    NSUInteger elements = [global.answerArray count] - 1;
+    NSUInteger elements = [global.answerArray count];
   
     k=j+1;
     totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
@@ -513,8 +513,18 @@ char* choppy( char *s )
 //Place the if statement where j>#items in array here as well - new
 - (IBAction) Pass:(id)sender
 {
-    
-    
+    Singleton *global = [Singleton globalVar];
+    int p = [global.answerArray count];
+    NSLog(@"p = %d", p);
+    NSLog(@"j = %d", j);
+    int h = p-1;
+    NSLog(@"h = %d", h);
+    if (j == h){
+        [self.pocketsphinxController stopListening];
+        NSLog(@"NO MORE WORDS");
+        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert1 show];
+    } else {
     //Prints out next word
     Singleton *global = [Singleton globalVar];
     
@@ -522,14 +532,14 @@ char* choppy( char *s )
     global.index = j;
     [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j]waitUntilDone:NO];
     
-    NSUInteger elements = [global.answerArray count] - 1;
+    NSUInteger elements = [global.answerArray count];
     k=j+1;
     totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
     
     //Resets stats
     /*
     x_right=0;
-    x_wrong=0;
+    x_wrong=0;l
     difficulty=0;
     lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
     lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
@@ -544,6 +554,7 @@ char* choppy( char *s )
     [imageView3 setImage:img3];
     //exit(0); Use to terminate the app
     //[self performSegueWithIdentifier:@"test" sender: self];
+    }
 }
 
 //Displays if word was said correctly
@@ -634,7 +645,7 @@ char* choppy( char *s )
     //NSMutableArray *word = [[NSMutableArray alloc] init];
     //NSString *word;
     
-        NSUInteger elements = [global.answerArray count] - 1;
+        //NSUInteger elements = [global.answerArray count] - 1;
     
     //Converts Objective c pointer to type const char
     hyp = [hypothesis UTF8String];
@@ -683,7 +694,7 @@ char* choppy( char *s )
                 
                 //Increments to the next word
                 j++;
-                NSUInteger elements = [global.answerArray count] - 1;
+                NSUInteger elements = [global.answerArray count];
                 k = j + 1;
                 totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
                 
@@ -712,28 +723,9 @@ char* choppy( char *s )
                 //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
                 //lblCONFIDENCE.text = [NSString stringWithFormat:@"Confidence: %g",conf];
                 
-                //Resets counters for next word
-                /*
-                x_right=0;
-                x_wrong=0;
-                difficulty=0;
-                 */
-                
                 //Holds for 2 secs
                 //sleep(2);
-                
-                //Prints out resetted stats
-                /*
-                lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-                lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-                lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-                 */
-                
-                /*
-                [buttonCHECK1 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                [buttonCHECK2 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];                 
-                [buttonCHECK3 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                */
+
                 
                 UIImage *img1 = [UIImage imageNamed:@"blank.png"];
                 [imageView1 setImage:img1];
@@ -747,7 +739,7 @@ char* choppy( char *s )
             } else {
                 
                 [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"WRONG"] waitUntilDone:NO];
-                [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
+                //[self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
                 //Plays audio for incorrect answer
                 //NSString *path = [[NSBundle mainBundle] pathForResource:@"splat" ofType:@"mp3"];
                 //AVAudioPlayer* theAudio = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL];
@@ -765,84 +757,74 @@ char* choppy( char *s )
                 //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
                 //lblCONFIDENCE.text = [NSString stringWithFormat:@"Confidence: %g",conf];
                 
-                //Marks down an X 
-                /*
-                switch(x){
-                    case 0:
-                    {
-                        [buttonCHECK1 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
-                        x++;
-                    }break;
-                    case 1:
-                    {
-                        [buttonCHECK2 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
-                        x++;
-                    }break;
-                    case 2:
-                    {
-                        [buttonCHECK3 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
-                        x++;
-                    }break;   
-                    default: x=0; break;
-                }//End switch*/
-               if(x==0){
+                if(x==0){
+                   [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
                     [buttonCHECK1 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
                    UIImage *img1 = [UIImage imageNamed:@"wrong.png"];
                    [imageView1 setImage:img1];
                    
                 } else if(x==1){
+                    [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
                     [buttonCHECK2 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
                     UIImage *img2 = [UIImage imageNamed:@"wrong.png"];
                     [imageView2 setImage:img2];
                     
                 } else if(x==2){
+                    [self.fliteController say:[NSString stringWithFormat:@"NO MORE TRIES"] withVoice:self.secondVoiceToUse];
                     [buttonCHECK3 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
                     UIImage *img3 = [UIImage imageNamed:@"wrong.png"];
                     [imageView3 setImage:img3];
                     
                       sleep_msec(2);
                     printf("&&&&&&&&&&&&%d&&&&&&&&&&&&&&\n", x);
-                    /*
-                    sleep(5);
-                    x++;
-                    if(x==3){
-                        [buttonCHECK1 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                        [buttonCHECK2 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                        [buttonCHECK3 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                     }*/
-                } else if (x == 3){
-                  
+                    
+                    int p = [global.answerArray count];
+                    NSLog(@"p = %d", p);
+                    NSLog(@"j = %d", j);
+                    int h = p-1;
+                    NSLog(@"h = %d", h);
+                    if (j == h){
+                        [self.pocketsphinxController stopListening];
+                        NSLog(@"NO MORE WORDS");
+                        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        [alert1 show];
+                    } else {
+                    
+                    j++;
+                    
+                    global.index = j;
+                    [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
+                    
+                    NSUInteger elements = [global.answerArray count];
+                    k=j+1;
+                    totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
+                    
+                    UIImage *img1 = [UIImage imageNamed:@"blank.png"];
+                    [imageView1 setImage:img1];
+                    UIImage *img2 = [UIImage imageNamed:@"blank.png"];
+                    [imageView2 setImage:img2];
+                    img3 = [UIImage imageNamed:@"blank.png"];
+                    [imageView3 setImage:img3];
+                    
+                    x_wrong++;
+                    lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
+                    lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
+                    lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
+                    
+                    x = -1;
+                    }
+                } 
+                /*
+                else if (x == 3){
                     
                     j++;
 
                     global.index = j;
                     [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
                     
-                    //NSUInteger elements = [global.answerArray count] - 1;
+                    NSUInteger elements = [global.answerArray count];
                     k=j+1;
                     totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
-                    
-                    /*
-                    if(j < elements){
-                        NSLog(@"OMGGGGG LESS THAN");
-                    } else {
-                        NSLog(@"GREATER THAN");
-                    }*/
-                    
-                    //Resets stats
-                    /*
-                    x_right=0;
-                    x_wrong=0;
-                    difficulty=0;
-                    lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-                    lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-                    lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-                     */
-                    /*
-                    [buttonCHECK1 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                    [buttonCHECK2 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];                 
-                    [buttonCHECK3 setImage:[UIImage imageNamed:@"blank.png"] forState:UIControlStateNormal];
-                    */
                     
                     UIImage *img1 = [UIImage imageNamed:@"blank.png"];
                     [imageView1 setImage:img1];
@@ -857,7 +839,9 @@ char* choppy( char *s )
                     lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
                     
                     x = -1;
-                } x++;
+                } 
+                 */
+                x++;
             }
         }
     }//End Checking

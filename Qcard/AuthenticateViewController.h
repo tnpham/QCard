@@ -32,6 +32,7 @@
 @property (nonatomic, retain) UITextField *servername;
 @property (nonatomic, retain) UIButton *authenticate;
 @property (nonatomic, retain) UIButton *recoverpass;
+@property (nonatomic, retain) UIButton *checkBox;
 
 @property (nonatomic, assign) BOOL isChecked;
 //@property (nonatomic, retain) UIActivityIndicatorView *loader;
