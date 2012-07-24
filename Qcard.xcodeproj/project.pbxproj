@@ -17,7 +17,10 @@
 		55035CA7158136FF00C95F52 /* setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 55035CA5158136FF00C95F52 /* setting.png */; };
 		55035CA915813DDD00C95F52 /* no_mic.png in Resources */ = {isa = PBXBuildFile; fileRef = 55035CA815813DDD00C95F52 /* no_mic.png */; };
 		5503CBFA158295970013BB34 /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 5503CBF9158295970013BB34 /* checked.png */; };
+		55076C8F15B7267E009F54B7 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 55076C8E15B7267E009F54B7 /* MBProgressHUD.m */; };
 		550ACB4E151CC6CE0079290E /* AnswerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 550ACB4C151CC6CE0079290E /* AnswerViewController.m */; };
+		550BCEC3158BC8E60012E0FA /* speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 550BCEC1158BC8E60012E0FA /* speaker.png */; };
+		550BCEC4158BC8E60012E0FA /* speaker_mute.png in Resources */ = {isa = PBXBuildFile; fileRef = 550BCEC2158BC8E60012E0FA /* speaker_mute.png */; };
 		5511AD861520C2BF00CC167B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5511AD851520C2BF00CC167B /* SystemConfiguration.framework */; };
 		5511ADA41520DACE00CC167B /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 5511ADA31520DACE00CC167B /* Reachability.m */; };
 		5511ADA71520E19A00CC167B /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5511ADA61520E19A00CC167B /* SettingViewController.m */; };
@@ -38,6 +41,7 @@
 		55898140157415D600B83353 /* blkarrowright.png in Resources */ = {isa = PBXBuildFile; fileRef = 5589813E157415D600B83353 /* blkarrowright.png */; };
 		558981431574256400B83353 /* help_icon.gif in Resources */ = {isa = PBXBuildFile; fileRef = 558981411574256400B83353 /* help_icon.gif */; };
 		558981471574298300B83353 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558981461574298300B83353 /* AboutViewController.m */; };
+		55AA37A415B7616C0091EEA4 /* test in Resources */ = {isa = PBXBuildFile; fileRef = 55AA37A315B7616C0091EEA4 /* test */; };
 		55EC4B4B15264ED30095F876 /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EC4B4A15264ED30095F876 /* SetupViewController.m */; };
 		55EF726E152C8C7600984F37 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550C2901152BA71600D23B46 /* QuartzCore.framework */; };
 		55EF726F152C8C7E00984F37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550C2903152BA71F00D23B46 /* MapKit.framework */; };
@@ -128,8 +132,12 @@
 		55035CA5158136FF00C95F52 /* setting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = setting.png; path = images/setting.png; sourceTree = "<group>"; };
 		55035CA815813DDD00C95F52 /* no_mic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = no_mic.png; path = images/no_mic.png; sourceTree = "<group>"; };
 		5503CBF9158295970013BB34 /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checked.png; path = images/checked.png; sourceTree = "<group>"; };
+		55076C8D15B7267E009F54B7 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		55076C8E15B7267E009F54B7 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		550ACB4B151CC6CE0079290E /* AnswerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerViewController.h; sourceTree = "<group>"; };
 		550ACB4C151CC6CE0079290E /* AnswerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerViewController.m; sourceTree = "<group>"; };
+		550BCEC1158BC8E60012E0FA /* speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = speaker.png; path = images/speaker.png; sourceTree = "<group>"; };
+		550BCEC2158BC8E60012E0FA /* speaker_mute.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = speaker_mute.png; path = images/speaker_mute.png; sourceTree = "<group>"; };
 		550C2901152BA71600D23B46 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		550C2903152BA71F00D23B46 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5511AD851520C2BF00CC167B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -157,6 +165,7 @@
 		558981411574256400B83353 /* help_icon.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = help_icon.gif; sourceTree = SOURCE_ROOT; };
 		558981451574298300B83353 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		558981461574298300B83353 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		55AA37A315B7616C0091EEA4 /* test */ = {isa = PBXFileReference; lastKnownFileType = file; path = test; sourceTree = "<group>"; };
 		55EC4B4915264ED30095F876 /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		55EC4B4A15264ED30095F876 /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
 		55EF7278152C955700984F37 /* TapkuLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TapkuLibrary.xcodeproj; path = Tapku/src/TapkuLibrary.xcodeproj; sourceTree = "<group>"; };
@@ -263,6 +272,14 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		55AA37A515B761810091EEA4 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				55AA37A315B7616C0091EEA4 /* test */,
+			);
+			name = Database;
+			sourceTree = "<group>";
+		};
 		55EF7279152C955700984F37 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,6 +348,9 @@
 		55FD19E8151A2FB6001D567C /* Qcard */ = {
 			isa = PBXGroup;
 			children = (
+				55AA37A515B761810091EEA4 /* Database */,
+				55076C8D15B7267E009F54B7 /* MBProgressHUD.h */,
+				55076C8E15B7267E009F54B7 /* MBProgressHUD.m */,
 				55F11946152A391E00EF8250 /* Global */,
 				55FD19F1151A2FB6001D567C /* AppDelegate.h */,
 				55FD19F2151A2FB6001D567C /* AppDelegate.m */,
@@ -448,6 +468,8 @@
 		55FD1AD3151A7DE8001D567C /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				550BCEC1158BC8E60012E0FA /* speaker.png */,
+				550BCEC2158BC8E60012E0FA /* speaker_mute.png */,
 				5503CBF9158295970013BB34 /* checked.png */,
 				55035CA815813DDD00C95F52 /* no_mic.png */,
 				55035CA4158136FF00C95F52 /* home.png */,
@@ -610,6 +632,9 @@
 				55035CA7158136FF00C95F52 /* setting.png in Resources */,
 				55035CA915813DDD00C95F52 /* no_mic.png in Resources */,
 				5503CBFA158295970013BB34 /* checked.png in Resources */,
+				550BCEC3158BC8E60012E0FA /* speaker.png in Resources */,
+				550BCEC4158BC8E60012E0FA /* speaker_mute.png in Resources */,
+				55AA37A415B7616C0091EEA4 /* test in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +682,7 @@
 				558981471574298300B83353 /* AboutViewController.m in Sources */,
 				5512A5B615752B9A00AF725D /* AuthenticateViewController.m in Sources */,
 				55F94ACC157D5EC8002EBA00 /* MainViewController.m in Sources */,
+				55076C8F15B7267E009F54B7 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

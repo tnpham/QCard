@@ -18,6 +18,12 @@ static Singleton *globalVar= nil;
 
 @synthesize answerArray;
 @synthesize index;
+@synthesize wrongAnswer;
+
+@synthesize courseName;
+@synthesize files;
+
+
 
 #pragma mark -
 #pragma mark Singleton Methods
@@ -27,6 +33,8 @@ static Singleton *globalVar= nil;
     }
     return globalVar;
 }
+
+
 /*
 + (id)allocWithZone:(NSZone *)zone {
     return [[self sharedManager] retain];

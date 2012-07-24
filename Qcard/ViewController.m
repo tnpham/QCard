@@ -109,47 +109,6 @@
 }
 
 
-/* Sleep for specified msec */
-static void sleep_msec(int32 ms)
-{
-#if (defined(WIN32) && !defined(GNUWINCE)) || defined(_WIN32_WCE)
-    Sleep(ms);
-#else
-    // ------------------- Unix ------------------ 
-    struct timeval tmo;
-    
-    tmo.tv_sec = 0;
-    tmo.tv_usec = ms * 1000;
-    
-    select(0, NULL, NULL, NULL, &tmo);
-#endif
-}//--End Function
-
-//We used to trim "result", but now it is not needed. If any bugs arise when comparing strings, might reconsider.
-//http://www.allegro.cc/forums/thread/562862
-//From Peter Hull
-char* trim(char* b)
-{
-    char* e=strrchr(b, '\0'); /* Find the final null */
-    while(b<e && isspace(*b)) /* Scan forward */
-        ++b;
-    while (e>b && isspace(*(e-1))) /* scan back from end */
-        --e; 
-    *e='\0'; /* terminate new string */
-    return b;
-}//--End Function
-
-//Chops off the newline char at the end of a string
-//http://cboard.cprogramming.com/c-programming/70320-how-remove-newline-string.html
-//From quzah
-char* choppy( char *s )
-{
-    s[strcspn ( s, "\n" )] = '\0';
-	return s;
-}
-
-
-
 // The last class we're using here is LanguageModelGenerator but I don't think it's advantageous to lazily instantiate it. You can see how it's used below.
 
 #pragma mark -
@@ -228,121 +187,11 @@ char* choppy( char *s )
                 global.answerArray = [[NSMutableArray alloc] init ];
             }
             
-            //NSString *str = stored_answer;
-            
             //Stores the answer
             [global.answerArray addObject:stored_answer];
         }
         
-        /*Buugggyyy
-        //Checks if array is nil and initializes it
-        if (global.answerArray == nil)
-        {
-            global.answerArray = [[NSMutableArray alloc] init ];
-        }
-        
-        //NSString *str = stored_answer;
-        
-        //Stores the answer
-        [global.answerArray addObject:stored_answer];
-        
-        i++;*/
-        
     }//End while 
-    
-    //*********************
-    
-    /*
-    NSString *filePathzz = [[NSBundle mainBundle] pathForResource:@"masterfile" ofType:@"txt"];
-    NSArray *arrayOfLines = [filePathzz componentsSeparatedByString:@"\n"];
-    if(filePathzz){
-        NSString *textFromFile = [NSString stringWithContentsOfFile:filePathzz];
-        NSLog(@"%@", textFromFile);
-    }*/
-    
-/*
-    FILE *text;
-	char line[MAX_LINE_LEN];
-    char *eof;
-    
-	char delims[] = "/";
-	char *temp = NULL;
-	char *result2 = NULL;
-	char *result = NULL;
-	char *arr[14];
-	int counter = 0;
-	int i=0;
-    
-    x_right = 0;
-    x_wrong = 0;
-    difficulty = 0;
-    
-    //Global variable to store words into array
-    Singleton *global = [Singleton globalVar];
-    
-    //text = fopen("/Users/LQX/Xcode/Qcard/model/lm/en/masterfile.txt", "r");
-    text = fopen("/Users/LQX/Xcode/Qcard/model/lm/en/8109.txt", "r");
-    //text = fopen("/masterfile.txt", "r");
-    //eof = "bonjuer/hello";
-    //int p = 0;
-    //while(p == 0){
-    while( (eof = fgets (line, MAX_LINE_LEN, text)) != NULL){
-    //while(tmp = [nse nextObject]){
-        NSLog(@"INSIDE");
-        arr[i] = strdup(eof);
-        //arr[i] = strdup(tmp);
-        
-		//breaks the line into two words
-		temp = strtok( eof, delims );
-		while( temp != NULL ) {
-			if (counter == 0){
-				//Stores the first word for display
-				result2 = temp;
-				//Sets to null
-				temp = strtok( NULL, delims );
-			} else { 
-				//Stores the second word to be compared with and chops off newline char at the end
-				result = choppy(temp);
-				//Sets to null
-				temp = strtok( NULL, delims );
-			}
-			counter++;
-		}
-
-        
-        //Checks if array is nil and initializes it
-        if (global.answerArray == nil)
-        {
-            global.answerArray = [[NSMutableArray alloc] init ];
-        }
-
-        
-        //Displayed word
-        target[i] = strdup(result2);
-        //Answer
-        target2[i] = strdup(result);
-        
-        //Converts C char type into objective-c NSString type
-        NSString *str = [NSString stringWithUTF8String:strdup(result)];   
-        
-        //Another way to convert
-        //NSString *aa = [NSString stringWithCString:(char*)strdup(result) encoding: NSASCIIStringEncoding];
-        
-        //Stores the answer
-        [global.answerArray addObject:str];
-
-        i++;
-        //p++;
-        //break;
-    }//End outside while
- */
-    
-    
-    
-    
-    
-    
-    
 
     NSUInteger elements = [global.answerArray count];
   
@@ -536,16 +385,6 @@ char* choppy( char *s )
     k=j+1;
     totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
     
-    //Resets stats
-    /*
-    x_right=0;
-    x_wrong=0;l
-    difficulty=0;
-    lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-    lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-    lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-    */
-    
     UIImage *img1 = [UIImage imageNamed:@"blank.png"];
     [imageView1 setImage:img1];
     UIImage *img2 = [UIImage imageNamed:@"blank.png"];
@@ -688,7 +527,14 @@ char* choppy( char *s )
             //if([[target2 objectAtIndex:j] isEqualToString: test]){
             if([trim isEqualToString: trim2] == YES){
                 [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"CORRECT"] waitUntilDone:NO];
-                [self.fliteController say:[NSString stringWithFormat:@"GOOD JOB"] withVoice:self.secondVoiceToUse];
+                
+                //Suspend recognition so that the playback voice does not get recorded
+                [self.pocketsphinxController suspendRecognition];	
+                NSLog(@"PAUSED");
+
+                
+                [self.fliteController say:[NSString stringWithFormat:@"GOOD JOB"] withVoice:self.secondVoiceToUse];NSLog(@"GOOD JOB!!!");
+                
                 [buttonCHECK2 setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
                 sleep(2);
                 
@@ -736,6 +582,9 @@ char* choppy( char *s )
                 
                 x=0;
                 
+                //Resume recognition
+                [self.pocketsphinxController resumeRecognition];
+                NSLog(@"RESUMED");
             } else {
                 
                 [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"WRONG"] waitUntilDone:NO];
@@ -744,14 +593,6 @@ char* choppy( char *s )
                 //NSString *path = [[NSBundle mainBundle] pathForResource:@"splat" ofType:@"mp3"];
                 //AVAudioPlayer* theAudio = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL];
                 //[theAudio play];
-                
-                //Stats
-                /*
-                x_wrong++;
-                lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-                lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-                lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-                 */
                 
                 //Extra Stats
                 //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
@@ -775,7 +616,7 @@ char* choppy( char *s )
                     UIImage *img3 = [UIImage imageNamed:@"wrong.png"];
                     [imageView3 setImage:img3];
                     
-                      sleep_msec(2);
+                      
                     printf("&&&&&&&&&&&&%d&&&&&&&&&&&&&&\n", x);
                     
                     int p = [global.answerArray count];
@@ -814,33 +655,6 @@ char* choppy( char *s )
                     x = -1;
                     }
                 } 
-                /*
-                else if (x == 3){
-                    
-                    j++;
-
-                    global.index = j;
-                    [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
-                    
-                    NSUInteger elements = [global.answerArray count];
-                    k=j+1;
-                    totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
-                    
-                    UIImage *img1 = [UIImage imageNamed:@"blank.png"];
-                    [imageView1 setImage:img1];
-                    UIImage *img2 = [UIImage imageNamed:@"blank.png"];
-                    [imageView2 setImage:img2];
-                    UIImage *img3 = [UIImage imageNamed:@"blank.png"];
-                    [imageView3 setImage:img3];
-                    
-                    x_wrong++;
-                    lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-                    lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-                    lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-                    
-                    x = -1;
-                } 
-                 */
                 x++;
             }
         }

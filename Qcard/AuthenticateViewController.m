@@ -7,6 +7,8 @@
 //
 
 #import "AuthenticateViewController.h"
+#import "Singleton.h"
+#import "MBProgressHUD.h"
 
 @interface NSURLRequest (DummyInterface)
 + (BOOL)allowsAnyHTTPSCertificateForHost:(NSString*)host;
@@ -44,6 +46,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
 	// Do any additional setup after loading the view.
     // BACKGROUND IMAGE
 	self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"background.png"]];
@@ -137,81 +141,254 @@
 //Checks if the username and password is valid
 - (IBAction) authenticate:(id)sender
 {
+    Singleton *global = [Singleton globalVar];
+
+    NSString *rval;
+        
+    //Finding memory disk space$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
+    /*
+    NSDictionary *fsAttr = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
+    float diskSize = [[fsAttr objectForKey:NSFileSystemSize] doubleValue] / 1000000000;
+                      NSLog(@"Disk Size: %0.0f", diskSize);
+    
+    float freeSize = [[fsAttr objectForKey:NSFileSystemFreeSize] doubleValue] / 1000000000;
+    NSLog(@"Free Disk Size: %0.0f", freeSize);
+    
+    float totalSpace = 0.0f;
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    if (dictionary) {
+        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        totalSpace = [fileSystemSizeInBytes floatValue];
+        NSLog(@"%0.0f", totalSpace);
+    }*/
+    //Finding memory disk space$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
+    
+
+    
+        
     //If valid, go to next page
     //if ([username.text isEqualToString: @"%@"] && [password.text isEqualToString: @"%@"]){
     //Checks if the username and password is empty
     if (([username.text length] > 0) && ([password.text length] > 0) && ([servername.text length] > 0)){
 
-        //loader.hidden = FALSE;
-        //[loader startAnimating];
-        authenticate.enabled = FALSE;
-        
-        //www.cocoanetics.com/2009/11/ignoring-certificate-errors-on-nsurlrequest
-        //passes the username and password to the server php pages to check valid user
-        //NSString *url = [NSString stringWithFormat:@"https://129.128.136.143/moodle/local/phpFile.php?user=%@&pass=%@", username.text, password.text];  // server name does not match
-        
-        NSString *url = [NSString stringWithFormat:@"https://%@/moodle/local/qcardloader/phpFile.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
-
-        NSURL *URL = [NSURL URLWithString:url];
-        
-        NSLog(@"%@", url);
-        
-        NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-        NSURLResponse *response;
-        NSError *error = nil;
-        [NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[URL host]];
-        NSData *data = [NSURLConnection sendSynchronousRequest:request
-                                             returningResponse:&response error:&error];
-        
-        //Have a setting where you can trust the certificate or not.
-        //popup of confirmation to bypass certificate
-        if (error)
-        {
-            NSLog(@"%@", [error localizedDescription]);
-        }
-        else
-        {
-            NSString *result = [[NSString alloc] initWithData:data
-                                                      encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", result);
-        } 
-        
-        //Grabs the return value
-        NSString *rval = [[NSString alloc]initWithData: data encoding:NSUTF8StringEncoding];
-        NSLog(@"%@",rval);
-        if ([rval isEqualToString: @"true"]){
+            //loader.hidden = FALSE;
+            //[loader startAnimating];
+            authenticate.enabled = FALSE;
             
-            //Changes to the next view
-            [self performSegueWithIdentifier:@"validatedsegue" sender: self];
-            NSLog(@"Access Granted");
+            //www.cocoanetics.com/2009/11/ignoring-certificate-errors-on-nsurlrequest
+            //passes the username and password to the server php pages to check valid user
+            //NSString *url = [NSString stringWithFormat:@"https://129.128.136.143/moodle/local/phpFile.php?user=%@&pass=%@", username.text, password.text];  // server name does not match
+            
+            NSString *url = [NSString stringWithFormat:@"https://%@/moodle/mod/qcardloader/infoControl.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
+            
+            //NSString *url = [NSString stringWithFormat:@"https://%@/moodle/local/qcardloader/phpFile.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
 
+
+            NSURL *URL = [NSURL URLWithString:url];
+            NSString *course;
+            
+            NSLog(@"%@", url);
+            
+            NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+            NSURLResponse *response;
+            NSError *error = nil;
+            [NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[URL host]];
+            NSData *data = [NSURLConnection sendSynchronousRequest:request
+                                                 returningResponse:&response error:&error];
+        
+            //Authenticate loader
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.labelText = @"Authenticating...";
+        
+        
+            //Have a setting where you can trust the certificate or not.
+            //popup of confirmation to bypass certificate
+            if (error)
+            {
+                NSLog(@"%@", [error localizedDescription]);
+                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Could not connect to server"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert1 show];
+                NSLog(@"Could not connect to server");
+                
+                //Hide Loader
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                
+            } else {
+                /*
+                NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                NSLog(@"%@", result);*/
+                
+                //Grabs the return value
+                rval = [[NSString alloc]initWithData: data encoding:NSUTF8StringEncoding];
+                
+                NSLog(@"%@",rval);
+                
+                //Grabs all the available files
+                NSArray *file = [rval componentsSeparatedByString:@"\n"];
+                
+                NSLog(@"%i", [file count]);
+
+                //Initializes the array
+                if (global.courseName == nil)
+                {
+                    //global.courseName = [[NSMutableArray alloc] init ];
+                    //global.courseName = [NSMutableDictionary dictionary];
+                    global.courseName = [[NSMutableDictionary alloc] init];
+                    
+                }
+                if (global.files == nil)
+                {
+                    global.files = [[NSMutableArray alloc] init]; 
+                    NSLog(@"Allocated");
+                }
+                
+                //Stores the files with their respective courses
+
+                int i=1;
+                BOOL condition;
+                
+                while (i<[file count]){
+//                for (int i=1; i<[file count]; i++){
+                    if ([[file objectAtIndex:i] isEqualToString: @"course:"]){
+                        NSLog(@"Coursetest");
+                        //Increment to get the course name
+                        i++;
+                        //Temp storage
+                        course = [file objectAtIndex:i];
+                        NSLog(@"&&&---%@---&&&", course);
+                        global.files = [[NSMutableArray alloc] init]; 
+
+                    }
+                    
+//                    if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
+//                        while (condition){
+//                            NSLog(@"Entering while loop");
+//                            i++;
+//                            
+//                            NSLog(@"File: %@", [file objectAtIndex:i]);
+//                    
+//                            //Add file names to array
+//                            [global.files addObject:[file objectAtIndex:i]];
+//                            NSLog(@"Added %@", [file objectAtIndex:i]);
+//                            
+//                            if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
+//                                NSLog(@"Second if statement");
+//                                i++;
+//                                
+//                                NSLog(@"File: %@", [file objectAtIndex:i]);
+//
+//                                //Add file names to array
+//                                [global.files addObject:[file objectAtIndex:i]];
+//                                NSLog(@"Added %@", [file objectAtIndex:i]);
+//                              
+//                            } else if ([[file objectAtIndex:i] isEqualToString: @"course:"]){
+//                                
+//                                i--;
+//                                
+//                                NSLog(@"----EXIT CONDITION---");
+//                                condition = FALSE;
+//                                
+//                            } else if ([[file objectAtIndex:i] isEqualToString: @""]){
+//                                NSLog(@"***EOF***");
+//                                condition = FALSE;
+//                            }
+//                        }
+//                    }
+                    
+                    if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
+                        i++;
+                        //                            
+                        NSLog(@"File: %@", [file objectAtIndex:i]);
+                        //                    
+                        //Add file names to array
+                        [global.files addObject:[file objectAtIndex:i]];
+                        NSLog(@"Added %@", [file objectAtIndex:i]);
+                    }
+                    
+                    [global.courseName setObject:global.files forKey:course];
+
+//                    condition = TRUE;
+                    i++;
+                }
+                NSLog(@"File Ended");
+                NSLog(@"%i", [global.courseName count]);
+
+                NSLog(@"%@", global.courseName);
+
+    //        } 
+            
+//                [global.courseName setObject:global.files forKey:[file objectAtIndex:i]];
 
             
-        } else {
-            //Alerts user something is wrong
-            UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert1 show];
-            NSLog(@"Invalid username or password");
             
-            if (isChecked == 1){
+    //        //Grabs all the available files
+    //        NSArray *file = [rval componentsSeparatedByString:@"\n"];
+    //        
+    //        NSLog(@"%i", [file count]);
+    //        
+    //        //Initializes the array
+    //        if (global.courseName == nil)
+    //        {
+    //            //global.courseName = [[NSMutableArray alloc] init ];
+    //            //global.courseName = [NSMutableDictionary dictionary];
+    //            global.courseName = [[NSMutableDictionary alloc] init];
+    //
+    //        }
+    //        
+    //        //Stores the files with their respective courses
+    //        for (int i=1; i<([file count] -1); i++){
+    //            NSLog(@"%@",[file objectAtIndex:i]);
+    //            [global.courseName setObject:@"test" forKey:[file objectAtIndex:i]];
+    //            //NSLog(@"%@",[global.courseName setObject:@"test" forKey:[file objectAtIndex:i]]);
+    //
+    //        }
+            
+            //check if user is valid
+            if ([[file objectAtIndex:0] isEqualToString: @"true"]){
+                //Hide Loader
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                
+                //Changes to the next view
+                [self performSegueWithIdentifier:@"validatedsegue" sender: self];
+                NSLog(@"Access Granted");
 
-                NSLog(@"YAY");
-                NSString *usernameField = [username  text];
-                NSString *passwordField = [password text];
-                NSString *serverField = [servername text];
                 
-                NSUserDefaults *defaultData = [NSUserDefaults standardUserDefaults];
                 
-                [defaultData setObject:usernameField forKey:@"username"];
-                [defaultData setObject:passwordField forKey:@"password"];
-                [defaultData setObject:serverField forKey:@"server"];
                 
-                [defaultData synchronize];
+            } else {
+                //Hide Loader
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+                //Alerts user something is wrong
+                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert1 show];
+                NSLog(@"Invalid username or password");
+                
+                if (isChecked == 1){
+
+                    NSLog(@"YAY");
+                    NSString *usernameField = [username  text];
+                    NSString *passwordField = [password text];
+                    NSString *serverField = [servername text];
+                    
+                    NSUserDefaults *defaultData = [NSUserDefaults standardUserDefaults];
+                    
+                    [defaultData setObject:usernameField forKey:@"username"];
+                    [defaultData setObject:passwordField forKey:@"password"];
+                    [defaultData setObject:serverField forKey:@"server"];
+                    
+                    [defaultData synchronize];
+                }
             }
         }
         
     //Displays error message when either username or password is invalid
     } else {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
         
         UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert1 show];
@@ -228,7 +405,7 @@
     }
     else
     {
-        NSLog(@"OMGGG cancel");
+        NSLog(@"OMGGG Cancel");
     }
 }
 
@@ -247,7 +424,6 @@
 /*
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    
     NSLog(@"DONE.........");
     [webData appendData:data];
     [self.webData appendData:data]; 

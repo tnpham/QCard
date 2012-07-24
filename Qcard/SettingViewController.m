@@ -7,6 +7,8 @@
 //
 
 #import "SettingViewController.h"
+#import "Singleton.h"
+//#import "CollapsableTableView.h"
 
 @interface SettingViewController ()
 
@@ -18,6 +20,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    Singleton *global = [Singleton globalVar];
+
 	
 	//Initialize the array.
 	listOfItems = [[NSMutableArray alloc] init];
@@ -27,12 +31,16 @@
 	
 	NSArray *countriesLivedInArray = [NSArray arrayWithObjects:@"Exercise 1", @"Exercise 2", nil];
 	NSDictionary *countriesLivedInDict = [NSDictionary dictionaryWithObject:countriesLivedInArray forKey:@"Countries"];
+    
+ 
 	
 	[listOfItems addObject:countriesToLiveInDict];
 	[listOfItems addObject:countriesLivedInDict];
 	
 	//Set the title
 	self.navigationItem.title = @"Countries";
+    
+    //NSLog(@"%@", [global.courseName objectAtIndex: 1]);
 }
 
 
@@ -73,7 +81,7 @@
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
+    NSLog(@"Number of sections: %i", [listOfItems count]);
 	return [listOfItems count];
 }
 
@@ -88,11 +96,39 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	
+    Singleton *global = [Singleton globalVar];
+
+    /*
 	if(section == 0)
 		return @"Moodle 101";
 	else
 		return @"French 301";
+    */
+    //NSLog(@"%@", global.courseName);
+    NSArray *keys = [global.courseName allKeys];
+    NSLog(@"%@", keys);
+    NSLog(@"Number of keys: %i", [keys count]);
+    
+    for (NSString *key in keys){
+        NSLog(@"%@ is %@", key, [global.courseName objectForKey:key]);
+    }
+    
+    for(int i=0; i < [keys count]; i++){
+//        if (section == i){
+            /*
+            NSLog(@"%@", [global.courseName objectAtIndex: i]);
+            return [global.courseName objectAtIndex: i];
+             */
+            //NSLog(@"%@", [global.courseName objectForKey:[[global.courseName allKeys] objectAtIndex:i]]);
+            //NSLog(@"BREAK");
+            NSLog(@"Header %@", [keys objectAtIndex:i]);
+            //return [global.courseName objectForKey:[[global.courseName allKeys] objectAtIndex:i]];
+            return [keys objectAtIndex:i];
+
+//        }
+    }
+    
+   
 }
 
 // Customize the appearance of table view cells.
@@ -102,7 +138,10 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier];
+        //Deprecated initWithFrame:CGRectZero
+        //cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier];
+        
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     // Set up the cell...
@@ -111,7 +150,11 @@
 	NSDictionary *dictionary = [listOfItems objectAtIndex:indexPath.section];
 	NSArray *array = [dictionary objectForKey:@"Countries"];
 	NSString *cellValue = [array objectAtIndex:indexPath.row];
-	cell.text = cellValue;
+    
+    //Deprecated
+//	cell.text = cellValue;
+    cell.textLabel.text = cellValue;
+
     
     return cell;
 }
@@ -133,10 +176,18 @@
 	dvController = nil;
 }*/
 
+//Deprecated, use one below
+/*
 - (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath {
 	
 	//return UITableViewCellAccessoryDetailDisclosureButton;
 	return UITableViewCellAccessoryDisclosureIndicator;
+}*/
+
+- (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
 }
 
 /*
