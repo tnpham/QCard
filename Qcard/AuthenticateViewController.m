@@ -31,7 +31,6 @@
 //@synthesize loader;
 //@synthesize webData;
 
-
 /******************************************/
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -248,103 +247,40 @@
                 //Stores the files with their respective courses
 
                 int i=1;
-                BOOL condition;
                 
                 while (i<[file count]){
 //                for (int i=1; i<[file count]; i++){
                     if ([[file objectAtIndex:i] isEqualToString: @"course:"]){
                         NSLog(@"Coursetest");
-                        //Increment to get the course name
+                        //Increments to get the course name
                         i++;
-                        //Temp storage
+                        //Temp holder for course
                         course = [file objectAtIndex:i];
                         NSLog(@"&&&---%@---&&&", course);
+                        //Creates a new array to store all the file names
                         global.files = [[NSMutableArray alloc] init]; 
 
                     }
                     
-//                    if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
-//                        while (condition){
-//                            NSLog(@"Entering while loop");
-//                            i++;
-//                            
-//                            NSLog(@"File: %@", [file objectAtIndex:i]);
-//                    
-//                            //Add file names to array
-//                            [global.files addObject:[file objectAtIndex:i]];
-//                            NSLog(@"Added %@", [file objectAtIndex:i]);
-//                            
-//                            if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
-//                                NSLog(@"Second if statement");
-//                                i++;
-//                                
-//                                NSLog(@"File: %@", [file objectAtIndex:i]);
-//
-//                                //Add file names to array
-//                                [global.files addObject:[file objectAtIndex:i]];
-//                                NSLog(@"Added %@", [file objectAtIndex:i]);
-//                              
-//                            } else if ([[file objectAtIndex:i] isEqualToString: @"course:"]){
-//                                
-//                                i--;
-//                                
-//                                NSLog(@"----EXIT CONDITION---");
-//                                condition = FALSE;
-//                                
-//                            } else if ([[file objectAtIndex:i] isEqualToString: @""]){
-//                                NSLog(@"***EOF***");
-//                                condition = FALSE;
-//                            }
-//                        }
-//                    }
-                    
                     if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
+                        //Increments to retrieve the file name
                         i++;
-                        //                            
                         NSLog(@"File: %@", [file objectAtIndex:i]);
-                        //                    
                         //Add file names to array
                         [global.files addObject:[file objectAtIndex:i]];
                         NSLog(@"Added %@", [file objectAtIndex:i]);
                     }
                     
+                    //Stores the courses and their respective files
                     [global.courseName setObject:global.files forKey:course];
 
-//                    condition = TRUE;
                     i++;
                 }
                 NSLog(@"File Ended");
                 NSLog(@"%i", [global.courseName count]);
 
-                NSLog(@"%@", global.courseName);
+                NSLog(@"Contents of Dictionary: %@", global.courseName);
 
-    //        } 
-            
-//                [global.courseName setObject:global.files forKey:[file objectAtIndex:i]];
-
-            
-            
-    //        //Grabs all the available files
-    //        NSArray *file = [rval componentsSeparatedByString:@"\n"];
-    //        
-    //        NSLog(@"%i", [file count]);
-    //        
-    //        //Initializes the array
-    //        if (global.courseName == nil)
-    //        {
-    //            //global.courseName = [[NSMutableArray alloc] init ];
-    //            //global.courseName = [NSMutableDictionary dictionary];
-    //            global.courseName = [[NSMutableDictionary alloc] init];
-    //
-    //        }
-    //        
-    //        //Stores the files with their respective courses
-    //        for (int i=1; i<([file count] -1); i++){
-    //            NSLog(@"%@",[file objectAtIndex:i]);
-    //            [global.courseName setObject:@"test" forKey:[file objectAtIndex:i]];
-    //            //NSLog(@"%@",[global.courseName setObject:@"test" forKey:[file objectAtIndex:i]]);
-    //
-    //        }
             
             //check if user is valid
             if ([[file objectAtIndex:0] isEqualToString: @"true"]){

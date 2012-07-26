@@ -20,25 +20,72 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    Singleton *global = [Singleton globalVar];
+    Singleton *global = [Singleton globalVar];
 
-	
-	//Initialize the array.
-	listOfItems = [[NSMutableArray alloc] init];
-	
-	NSArray *countriesToLiveInArray = [NSArray arrayWithObjects:@"French", @"German", @"Russian", @"English", nil];
-	NSDictionary *countriesToLiveInDict = [NSDictionary dictionaryWithObject:countriesToLiveInArray forKey:@"Countries"];
-	
-	NSArray *countriesLivedInArray = [NSArray arrayWithObjects:@"Exercise 1", @"Exercise 2", nil];
-	NSDictionary *countriesLivedInDict = [NSDictionary dictionaryWithObject:countriesLivedInArray forKey:@"Countries"];
+    NSArray *keys = [global.courseName allKeys];
+    id key, value;
     
+	for(NSString *key in keys){
+        NSLog(@"%@ is %@", key, [global.courseName objectForKey:key]);
+        NSLog(@"BreaK");
+    }
+    
+    listOfItems = [[NSMutableArray alloc] init];
+
+    for (int i=0; i < [global.courseName count]; i++){
+        
+        key = [keys objectAtIndex: i];
+        value = [global.courseName objectForKey: key];
+        
+        //Allocates memory for array and then adds all the files
+        NSMutableArray *courseFiles = [[NSMutableArray alloc] init ];
+        for(int j=0; j < [value count]; j++){
+            [courseFiles addObject:[value objectAtIndex:j]];
+        }
+        
+//        NSMutableArray *countriesToLiveInArray = [NSMutableArray arrayWithObjects: @"TEST", nil];
+        
+        NSDictionary *countriesToLiveInDict = [NSDictionary dictionaryWithObject:courseFiles forKey:@"CourseFiles"];
+        [listOfItems addObject:countriesToLiveInDict];
+        
+        NSLog(@"Key: %@ for values: %@", key, value);
+        
+        
+        
+    }
+    
+	//Initialize the array.
+//	listOfItems = [[NSMutableArray alloc] init];
+	
+    /*
+    for (int i=0; i < [global.courseName count]; i++){
+        listOfItems = [[NSMutableArray alloc] init];
+
+        for (int i=0; i < [global.files count]; i++){
+            NSArray *countriesToLiveInArray = [NSArray arrayWithObjects: global.files,nil];
+            
+            if(i == [global.files count]){
+                NSDictionary *countriesToLiveInDict = [NSDictionary dictionaryWithObject:countriesToLiveInArray forKey:@"Countries"];
+                [listOfItems addObject:countriesToLiveInDict];
+
+            }
+        }
+    }
+     */
+    
+//	NSArray *countriesToLiveInArray = [NSArray arrayWithObjects:@"French", @"German", @"Russian", @"English", nil];
+//	NSDictionary *countriesToLiveInDict = [NSDictionary dictionaryWithObject:countriesToLiveInArray forKey:@"Countries"];
+//	
+//	NSArray *countriesLivedInArray = [NSArray arrayWithObjects:@"Exercise 1", @"Exercise 2", nil];
+//	NSDictionary *countriesLivedInDict = [NSDictionary dictionaryWithObject:countriesLivedInArray forKey:@"Countries"];
+//    
  
 	
-	[listOfItems addObject:countriesToLiveInDict];
-	[listOfItems addObject:countriesLivedInDict];
+//	[listOfItems addObject:countriesToLiveInDict];
+//	[listOfItems addObject:countriesLivedInDict];
 	
 	//Set the title
-	self.navigationItem.title = @"Countries";
+	self.navigationItem.title = @"CourseFiles";
     
     //NSLog(@"%@", [global.courseName objectAtIndex: 1]);
 }
@@ -91,7 +138,7 @@
 	
 	//Number of rows it should expect should be based on the section
 	NSDictionary *dictionary = [listOfItems objectAtIndex:section];
-    NSArray *array = [dictionary objectForKey:@"Countries"];
+    NSArray *array = [dictionary objectForKey:@"CourseFiles"];
 	return [array count];
 }
 
@@ -106,29 +153,22 @@
     */
     //NSLog(@"%@", global.courseName);
     NSArray *keys = [global.courseName allKeys];
-    NSLog(@"%@", keys);
+//    NSLog(@"%@", keys);
     NSLog(@"Number of keys: %i", [keys count]);
     
-    for (NSString *key in keys){
-        NSLog(@"%@ is %@", key, [global.courseName objectForKey:key]);
-    }
+//    for (NSString *key in keys){
+//        NSLog(@"%@ is %@", key, [global.courseName objectForKey:key]);
+//    }
     
     for(int i=0; i < [keys count]; i++){
-//        if (section == i){
-            /*
-            NSLog(@"%@", [global.courseName objectAtIndex: i]);
-            return [global.courseName objectAtIndex: i];
-             */
-            //NSLog(@"%@", [global.courseName objectForKey:[[global.courseName allKeys] objectAtIndex:i]]);
-            //NSLog(@"BREAK");
+        if (section == i){
+
             NSLog(@"Header %@", [keys objectAtIndex:i]);
             //return [global.courseName objectForKey:[[global.courseName allKeys] objectAtIndex:i]];
             return [keys objectAtIndex:i];
 
-//        }
+        }
     }
-    
-   
 }
 
 // Customize the appearance of table view cells.
@@ -148,13 +188,15 @@
 	
 	//First get the dictionary object
 	NSDictionary *dictionary = [listOfItems objectAtIndex:indexPath.section];
-	NSArray *array = [dictionary objectForKey:@"Countries"];
+	NSArray *array = [dictionary objectForKey:@"CourseFiles"];
 	NSString *cellValue = [array objectAtIndex:indexPath.row];
     
     //Deprecated
 //	cell.text = cellValue;
     cell.textLabel.text = cellValue;
-
+    
+    //Image on the left of the cell
+    cell.imageView.image = [UIImage imageNamed:@"blank.png"];
     
     return cell;
 }
@@ -186,8 +228,12 @@
 
 - (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    //Image on the right side of the cell, can be customized to represent downloaded and not downloaded yet***
     
+//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"speaker.png"]];
 }
 
 /*
@@ -195,7 +241,6 @@
 	
 	[self tableView:tableView didSelectRowAtIndexPath:indexPath];
 }*/
-
 
 /*
  // Override to support conditional editing of the table view.

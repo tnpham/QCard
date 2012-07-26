@@ -73,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364844272.913584"
+         timestampString = "364925564.087015"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "144"
-         endingLineNumber = "144"
+         startingLineNumber = "183"
+         endingLineNumber = "183"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364844272.913584"
+         timestampString = "364925564.087015"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "132"
-         endingLineNumber = "132"
+         startingLineNumber = "171"
+         endingLineNumber = "171"
          landmarkName = "-tableView:titleForHeaderInSection:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,25 +99,38 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364844272.913584"
+         timestampString = "364925564.087015"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "133"
-         endingLineNumber = "133"
-         landmarkName = "@implementation SettingViewController"
-         landmarkType = "3">
+         startingLineNumber = "172"
+         endingLineNumber = "172"
+         landmarkName = "-tableView:titleForHeaderInSection:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/AuthenticateViewController.m"
-         timestampString = "364489906.975005"
+         timestampString = "364937490.682744"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "147"
-         endingLineNumber = "147"
+         startingLineNumber = "146"
+         endingLineNumber = "146"
          landmarkName = "-authenticate:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Qcard/SettingViewController.m"
+         timestampString = "364929904.344365"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "46"
+         endingLineNumber = "46"
+         landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
