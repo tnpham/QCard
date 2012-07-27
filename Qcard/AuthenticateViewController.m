@@ -294,6 +294,13 @@
                 
                 
                 
+            } else if ([[file objectAtIndex:0] isEqualToString: @"DNE"]){
+                //Hide Loader
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                
+                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Username does not exist" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert1 show];
+                
             } else {
                 //Hide Loader
                 [MBProgressHUD hideHUDForView:self.view animated:YES];

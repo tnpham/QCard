@@ -108,12 +108,17 @@
 	return openEarsEventsObserver;
 }
 
-
 // The last class we're using here is LanguageModelGenerator but I don't think it's advantageous to lazily instantiate it. You can see how it's used below.
 
 #pragma mark -
 #pragma mark View Lifecycle
 - (void)viewDidLoad {
+    
+//    ViewController *test = [[ViewController alloc] init];
+    
+    NSLog(@"HELLO, THIS IS A TEST FOR E_FACTOR FUNCTION");
+    NSLog(@"E_Factor of: %f", [self E_factor:2.5 withq:4]);
+    NSLog(@"tset %f", pow(2,4));
     
     isPaused = FALSE;
     
@@ -423,9 +428,32 @@
     }
 }
 
+/************************
+ Function that calculates the frequency a of word appearing.
+ EF is between 1.1 and 2.5
+ q is rated according to a 5 point scale:
+ 5- Correct
+ 4- Correct with hesitation
+ 3- Correct with 1 miss
+ 2- Correct with 2 misses
+ 1- Incorrect
+ 0- Skipped
+
+ ***********************/
+- (double) E_factor: (double)EF withq: (double)q{
+    double EF_prime;
+    
+    EF_prime = EF - 0.8 + (0.28*q) - (0.02*pow(q,2));
+    //    EF_prime = (EF - 0.8 + (0.28*q) - (0.02*q*q));
+    //    NSLog(@"%f", EF);
+    //    NSLog(@"%f", pow(q,q));
+    //    NSLog(@"%f", EF_prime);
+    return EF_prime;
+}
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

@@ -23,7 +23,12 @@ static Singleton *globalVar= nil;
 @synthesize courseName;
 @synthesize files;
 
-
+//@synthesize EF_prime;
+//@synthesize EF;
+@synthesize troubledWords;
+@synthesize initWords;
+@synthesize easyWords;
+@synthesize skippedWords;
 
 #pragma mark -
 #pragma mark Singleton Methods

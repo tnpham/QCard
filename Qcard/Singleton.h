@@ -13,6 +13,25 @@
 
 @interface Singleton : UIViewController{
     
+    //SuperMemo algorithm
+    
+    //old easiness factor
+//    NSDecimalNumber *EF_prime;
+    double EF_prime;
+    
+    //new easiness factor
+//    NSDecimalNumber *EF;
+    double EF;
+    
+    //Words needing reviewing
+    NSMutableArray *troubledWords;
+    //Initial words
+    NSMutableArray *initWords;
+    //Have no trouble with
+    NSMutableArray *easyWords;
+    //Skipped words
+    NSMutableArray *skippedWords;
+    
     //AnswerView
     NSMutableArray *answerArray;
     int index;
@@ -24,6 +43,15 @@
     NSMutableArray *files;
     
 }
+
+//SuperMemo 
+//@property (nonatomic, retain) NSDecimalNumber *EF_prime;
+//@property (nonatomic, retain) NSDecimalNumber *EF;
+@property (nonatomic, retain) NSMutableArray *troubledWords;
+@property (nonatomic, retain) NSMutableArray *initWords;
+@property (nonatomic, retain) NSMutableArray *easyWords;
+@property (nonatomic, retain) NSMutableArray *skippedWords;
+
 
 //AnswerView
 @property (nonatomic, retain) NSMutableArray *answerArray;
