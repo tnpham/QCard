@@ -18,7 +18,7 @@ static Singleton *globalVar= nil;
 
 @synthesize answerArray;
 @synthesize index;
-@synthesize wrongAnswer;
+//@synthesize wrongAnswer;
 
 @synthesize courseName;
 @synthesize files;
@@ -26,7 +26,7 @@ static Singleton *globalVar= nil;
 //@synthesize EF_prime;
 //@synthesize EF;
 @synthesize troubledWords;
-@synthesize initWords;
+@synthesize initialWords;
 @synthesize easyWords;
 @synthesize skippedWords;
 

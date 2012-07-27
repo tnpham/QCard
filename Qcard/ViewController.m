@@ -114,7 +114,6 @@
 #pragma mark View Lifecycle
 - (void)viewDidLoad {
     
-//    ViewController *test = [[ViewController alloc] init];
     
     NSLog(@"HELLO, THIS IS A TEST FOR E_FACTOR FUNCTION");
     NSLog(@"E_Factor of: %f", [self E_factor:2.5 withq:4]);
@@ -162,7 +161,29 @@
     //NSMutableArray *values = [NSMutableArray new];
     NSString *tmp;
     
+    //Initalize all the arrays
+    if (global.answerArray == nil)
+    {
+        global.answerArray = [[NSMutableArray alloc] init ];
+    }
+    if (global.troubledWords == nil)
+    {
+        global.troubledWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.initialWords == nil)
+    {
+        global.initialWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.easyWords == nil)
+    {
+        global.easyWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.skippedWords == nil)
+    {
+        global.skippedWords = [[NSMutableArray alloc] init ];
+    }
     
+    //Read the file and parse each line and stores the word
     while(tmp = [nse nextObject])
     {
         //tokenizes the string
@@ -187,10 +208,10 @@
                 NSLog(@"Answer: %@", [target2 objectAtIndex:i]);
             }
             
-            if (global.answerArray == nil)
-            {
-                global.answerArray = [[NSMutableArray alloc] init ];
-            }
+//            if (global.answerArray == nil)
+//            {
+//                global.answerArray = [[NSMutableArray alloc] init ];
+//            }
             
             //Stores the answer
             [global.answerArray addObject:stored_answer];
@@ -363,41 +384,47 @@
     
 }
 
-//Glitchy
-//Place the if statement where j>#items in array here as well - new
+//Allows user to pass on to the next word
 - (IBAction) Pass:(id)sender
 {
     Singleton *global = [Singleton globalVar];
     int p = [global.answerArray count];
-    NSLog(@"p = %d", p);
-    NSLog(@"j = %d", j);
+//    NSLog(@"p = %d", p);
+//    NSLog(@"j = %d", j);
     int h = p-1;
-    NSLog(@"h = %d", h);
+//    NSLog(@"h = %d", h);
+    
     if (j == h){
         [self.pocketsphinxController stopListening];
         NSLog(@"NO MORE WORDS");
         UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert1 show];
+        
+        NSLog(@"Skipped Words: %@", global.skippedWords);
+
     } else {
     //Prints out next word
-    Singleton *global = [Singleton globalVar];
-    
-    j++;
-    global.index = j;
-    [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j]waitUntilDone:NO];
-    
-    NSUInteger elements = [global.answerArray count];
-    k=j+1;
-    totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
-    
-    UIImage *img1 = [UIImage imageNamed:@"blank.png"];
-    [imageView1 setImage:img1];
-    UIImage *img2 = [UIImage imageNamed:@"blank.png"];
-    [imageView2 setImage:img2];
-    UIImage *img3 = [UIImage imageNamed:@"blank.png"];
-    [imageView3 setImage:img3];
-    //exit(0); Use to terminate the app
-    //[self performSegueWithIdentifier:@"test" sender: self];
+//    Singleton *global = [Singleton globalVar];
+        
+        j++;
+        global.index = j;
+        [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j]waitUntilDone:NO];
+        
+        NSUInteger elements = [global.answerArray count];
+        k=j+1;
+        totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
+        
+        UIImage *img1 = [UIImage imageNamed:@"blank.png"];
+        [imageView1 setImage:img1];
+        UIImage *img2 = [UIImage imageNamed:@"blank.png"];
+        [imageView2 setImage:img2];
+        UIImage *img3 = [UIImage imageNamed:@"blank.png"];
+        [imageView3 setImage:img3];
+        //exit(0); Use to terminate the app
+        //[self performSegueWithIdentifier:@"test" sender: self];
+           
+        //Stores all the skipped words
+        [global.skippedWords addObject:[global.answerArray objectAtIndex:j]];    
     }
 }
 
@@ -541,18 +568,17 @@
             
             test = [NSString stringWithFormat:@"%s", word];
             
-            NSLog(@"Target word ----> %@, %d", [target2 objectAtIndex:j], [[target2 objectAtIndex:j] length]);
-            NSLog(@"TEST ----->>>> %@, %d", test, [test length]);
+//            NSLog(@"Target word ----> %@, %d", [target2 objectAtIndex:j], [[target2 objectAtIndex:j] length]);
+//            NSLog(@"TEST ----->>>> %@, %d", test, [test length]);
          
             
             NSString *trim = [[target2 objectAtIndex:j] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
              NSString *trim2 = [test stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             
-            NSLog(@" ----->>>> %@, %d", trim, [trim length]   );
-            NSLog(@"----> %@, %d", trim2, [trim2 length]);
+//            NSLog(@" ----->>>> %@, %d", trim, [trim length]   );
+//            NSLog(@"----> %@, %d", trim2, [trim2 length]);
             
             //Compares what you said with displayed word in another language and see if it's correct
-            //if([[target2 objectAtIndex:j] isEqualToString: test]){
             if([trim isEqualToString: trim2] == YES){
                 [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"CORRECT"] waitUntilDone:NO];
                 
@@ -639,6 +665,7 @@
                     [imageView2 setImage:img2];
                     
                 } else if(x==2){
+                    //Number of tries exceeded
                     [self.fliteController say:[NSString stringWithFormat:@"NO MORE TRIES"] withVoice:self.secondVoiceToUse];
                     [buttonCHECK3 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
                     UIImage *img3 = [UIImage imageNamed:@"wrong.png"];
@@ -655,8 +682,11 @@
                     if (j == h){
                         [self.pocketsphinxController stopListening];
                         NSLog(@"NO MORE WORDS");
+                                                
                         UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                         [alert1 show];
+                        
+                       
                     } else {
                     
                     j++;

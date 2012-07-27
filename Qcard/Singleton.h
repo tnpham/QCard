@@ -26,7 +26,7 @@
     //Words needing reviewing
     NSMutableArray *troubledWords;
     //Initial words
-    NSMutableArray *initWords;
+    NSMutableArray *initialWords;
     //Have no trouble with
     NSMutableArray *easyWords;
     //Skipped words
@@ -35,7 +35,7 @@
     //AnswerView
     NSMutableArray *answerArray;
     int index;
-    NSMutableArray *wrongAnswers;
+//    NSMutableArray *wrongAnswers;
     
     //AuthenticateView
     //Hash Table
@@ -48,7 +48,7 @@
 //@property (nonatomic, retain) NSDecimalNumber *EF_prime;
 //@property (nonatomic, retain) NSDecimalNumber *EF;
 @property (nonatomic, retain) NSMutableArray *troubledWords;
-@property (nonatomic, retain) NSMutableArray *initWords;
+@property (nonatomic, retain) NSMutableArray *initialWords;
 @property (nonatomic, retain) NSMutableArray *easyWords;
 @property (nonatomic, retain) NSMutableArray *skippedWords;
 
@@ -56,7 +56,7 @@
 //AnswerView
 @property (nonatomic, retain) NSMutableArray *answerArray;
 @property (nonatomic) int index;
-@property (nonatomic, retain) NSMutableArray *wrongAnswer;
+//@property (nonatomic, retain) NSMutableArray *wrongAnswer;
 
 //AuthenticateView
 @property (nonatomic, retain) NSMutableDictionary *courseName;
