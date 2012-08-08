@@ -7,14 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import "audioControl.h"
 
 @interface AnswerViewController : UIViewController{
     
+    IBOutlet UIButton *playWord;
 
     IBOutlet UILabel *lblANSWER;
     
+    audioControl *audio;
+    char audioFilePath[256];
+    AVAudioPlayer *audioPlayer;
+    
 }
 
--(IBAction)goBack;
+- (IBAction) playSound;
+- (IBAction) goBack;
+
+@property (nonatomic, strong) IBOutlet UIButton *playWord;
 
 @end

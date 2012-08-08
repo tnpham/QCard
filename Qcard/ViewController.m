@@ -28,6 +28,17 @@
 // ********************************************************************************************************************************************************************
 // ********************************************************************************************************************************************************************
 
+
+
+/*********************
+ ********************
+ ********************
+ File download
+ www.iphonedevsdk.com/forum/iphone-sdk-development/50862-download-text-file.html
+ *********************
+ *********************
+ ********************/
+ 
 #import "ViewController.h"
 #import <OpenEars/PocketsphinxController.h> // Please note that unlike in previous versions of OpenEars, we now link the headers through the framework.
 #import <OpenEars/FliteController.h>
@@ -67,7 +78,10 @@
 @synthesize uiUpdateTimer;
 
 @synthesize isPaused;
+@synthesize isEnabled;
 
+@synthesize voiceControl;
+@synthesize gameOver;
 
 #define kLevelUpdatesPerSecond 18 // We'll have the ui update 18 times a second to show some fluidity without hitting the CPU too hard.
 
@@ -113,13 +127,15 @@
 #pragma mark -
 #pragma mark View Lifecycle
 - (void)viewDidLoad {
-    
+    //Global variable to store words into array
+    Singleton *global = [Singleton globalVar];
     
     NSLog(@"HELLO, THIS IS A TEST FOR E_FACTOR FUNCTION");
     NSLog(@"E_Factor of: %f", [self E_factor:2.5 withq:4]);
     NSLog(@"tset %f", pow(2,4));
     
     isPaused = FALSE;
+    global.initial_round_over = FALSE;
     
     //NSData *dbFile = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://www.someurl.com/DatabaseName.sqlite"]];
     NSData *dbFile = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:@"https://github.com/ccgus/fmdb/blob/master/src/FMDatabase.h"]];
@@ -136,21 +152,20 @@
     
     //********************
     
-    //Global variable to store words into array
-    Singleton *global = [Singleton globalVar];
-    
-    //NSString *tmp2;
+
     NSString *stored_display;
     NSString *stored_answer;
     
+    //display
     target = [[NSMutableArray alloc]init];
+    //answer
     target2 = [[NSMutableArray alloc]init];
     
     x_right = 0;
     x_wrong = 0;
-    difficulty = 0;
     
     int i=0;
+    j=0;
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"8109" ofType:@"txt"];
     NSString *string = [[NSString alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:NULL];
@@ -158,30 +173,9 @@
     NSArray *lines = [string componentsSeparatedByString:@"\n"]; // each line, adjust character for line endings
     
     NSEnumerator *nse = [lines objectEnumerator];
-    //NSMutableArray *values = [NSMutableArray new];
     NSString *tmp;
     
-    //Initalize all the arrays
-    if (global.answerArray == nil)
-    {
-        global.answerArray = [[NSMutableArray alloc] init ];
-    }
-    if (global.troubledWords == nil)
-    {
-        global.troubledWords = [[NSMutableArray alloc] init ];
-    }
-    if (global.initialWords == nil)
-    {
-        global.initialWords = [[NSMutableArray alloc] init ];
-    }
-    if (global.easyWords == nil)
-    {
-        global.easyWords = [[NSMutableArray alloc] init ];
-    }
-    if (global.skippedWords == nil)
-    {
-        global.skippedWords = [[NSMutableArray alloc] init ];
-    }
+    [self initialize_global_arrays];
     
     //Read the file and parse each line and stores the word
     while(tmp = [nse nextObject])
@@ -197,36 +191,47 @@
         stored_answer = [nse2 nextObject];
         NSLog(@"----------%@, %d",stored_answer,stored_answer.length);
         
+        NSLog(@"display %@", stored_display);
+        NSLog(@"ans %@", stored_answer);
+        
         if ((stored_display.length != 0) && (stored_answer.length != 0)){
             [target addObject:stored_display];
             [target2 addObject:stored_answer];
+            NSLog(@"ans %@", stored_answer);
+
+            [global.initialWords addObject:stored_display];
+            [global.initialAnswers addObject:stored_answer]; 
+            
+            NSLog(@"INITIAL WORDS: %@", global.initialWords);
+              NSLog(@"TARGET: %@", target);
+            
+            NSLog(@"INITIAL ANSWERS: %@", global.initialAnswers);
+              NSLog(@"TARGET2: %@", target2);
+            
             NSLog(@"ADDED");
         
+            //debugging
             for(int i =0; i<[target count]; i++);
             {
                 NSLog(@"Displayed: %@", [target objectAtIndex:i]);
                 NSLog(@"Answer: %@", [target2 objectAtIndex:i]);
             }
             
-//            if (global.answerArray == nil)
-//            {
-//                global.answerArray = [[NSMutableArray alloc] init ];
-//            }
-            
             //Stores the answer
             [global.answerArray addObject:stored_answer];
+            NSLog(@"AnswerArray %@", global.answerArray);
         }
         
     }//End while 
 
-    NSUInteger elements = [global.answerArray count];
+    global.elements = [global.answerArray count];
   
-    k=j+1;
-    totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
+    global.array_index=j+1;
+    totalWORDS.text = [NSString stringWithFormat:@"%d / %u", global.array_index, global.elements];
     
     //Prints out the first word
-    //[self performSelectorOnMainThread:@selector(Word:) withObject:[NSString stringWithUTF8String:target[j]] waitUntilDone:NO];
-    [self performSelectorOnMainThread:@selector(Word:) withObject: [target objectAtIndex:j] waitUntilDone:NO];
+//    [self performSelectorOnMainThread:@selector(Word:) withObject: [target objectAtIndex:j] waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(Word:) withObject: [global.initialWords objectAtIndex:j] waitUntilDone:NO];
 
     
     sil=2;sp=2;
@@ -367,7 +372,7 @@
 
 
 
-
+/**************************** FUNCTIONS **********************************/
 
 
 //Displays the speech interpreted
@@ -377,10 +382,7 @@
     //Rotates text
     //lblWORD.transform = CGAffineTransformMakeRotation(-3.14/3.5);
     lblWORD.text = word;
-    
-    //[self setStatus:FORMAT(@"Word Recognized: %@" , word)];
-    
-    //[aiView stopAnimating];
+
     
 }
 
@@ -389,42 +391,81 @@
 {
     Singleton *global = [Singleton globalVar];
     int p = [global.answerArray count];
-//    NSLog(@"p = %d", p);
-//    NSLog(@"j = %d", j);
+//    int p = [global.skippedAnswers count];
+
+    NSLog(@"p = %d", p);
+    NSLog(@"j = %d", j);
     int h = p-1;
-//    NSLog(@"h = %d", h);
+    NSLog(@"h = %d", h);
     
     if (j == h){
-        [self.pocketsphinxController stopListening];
-        NSLog(@"NO MORE WORDS");
-        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert1 show];
-        
-        NSLog(@"Skipped Words: %@", global.skippedWords);
+        if (([global.skippedWords count] == 0) && ([global.troubledWords count] == 0)){
+            [self.pocketsphinxController stopListening];
+            NSLog(@"NO MORE WORDS");
+            
+            [self endGame];
+            
+        } else {
+            [global.initialWords removeAllObjects];
+            [self check_any_skipped_or_incorrect_words_left];
+            global.initial_round_over = TRUE;
+        }
 
+        NSLog(@"Skipped Words: %@", global.skippedWords);
+        
     } else {
-    //Prints out next word
-//    Singleton *global = [Singleton globalVar];
+        /******
+         ******
+         ******
+         BIG BUG when looping second time
+         *****
+         *****
+         *****/
         
-        j++;
-        global.index = j;
-        [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j]waitUntilDone:NO];
+        //Start a new round with skipped and inccorect words
+        if (global.initial_round_over == TRUE){
+            //Prints out next word
+            NSLog(@"value of j: %d", j);
+//            j++;
+//            global.index = j;
+            NSLog(@"value of j: %d", j);
+            NSLog(@"value of gindex: %d", global.index);
+
+            [self performSelectorOnMainThread:@selector(Word:) withObject:[global.skippedWords objectAtIndex:j]waitUntilDone:NO];
+            j++;
+            global.index = j;
+            
+//            global.elements = [global.answerArray count];
+//            global.array_index=j+1;
+            global.elements = [global.skippedWords count];
+            global.array_index=j;
+            totalWORDS.text = [NSString stringWithFormat:@"%d / %u", global.array_index, global.elements];
+            
+            [self resetImage];
+
+        } else {
+
+            //Stores all the skipped words
+//            [global.skippedWords addObject:[global.answerArray objectAtIndex:j]]; 
+            NSLog(@"Round not over yet");
+            [global.skippedWords addObject:[global.initialWords objectAtIndex:j]];    
+            [global.skippedAnswers addObject:[global.initialAnswers objectAtIndex:j]];    
+
         
-        NSUInteger elements = [global.answerArray count];
-        k=j+1;
-        totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
-        
-        UIImage *img1 = [UIImage imageNamed:@"blank.png"];
-        [imageView1 setImage:img1];
-        UIImage *img2 = [UIImage imageNamed:@"blank.png"];
-        [imageView2 setImage:img2];
-        UIImage *img3 = [UIImage imageNamed:@"blank.png"];
-        [imageView3 setImage:img3];
-        //exit(0); Use to terminate the app
-        //[self performSegueWithIdentifier:@"test" sender: self];
-           
-        //Stores all the skipped words
-        [global.skippedWords addObject:[global.answerArray objectAtIndex:j]];    
+            //Prints out next word
+            j++;
+            global.index = j;
+            [self performSelectorOnMainThread:@selector(Word:) withObject:[global.initialWords objectAtIndex:j]waitUntilDone:NO];
+            
+            global.elements = [global.answerArray count];
+            global.array_index=j+1;
+            totalWORDS.text = [NSString stringWithFormat:@"%d / %u", global.array_index, global.elements];
+            
+            [self resetImage];
+            
+            //exit(0); Use to terminate the app
+            //[self performSegueWithIdentifier:@"test" sender: self];
+        }
     }
 }
 
@@ -434,11 +475,6 @@
     //Another way to display text
     //lblCORRECTNESS.transform = CGAffineTransformMakeRotation(-3.14/3);
     lblCORRECTNESS.text = correctness;
-    
-    //[self setStatus:FORMAT(@"Answer: %@" , correctness)];
-    
-    //[buttonSpeak setEnabled:TRUE];
-    //[aiView stopAnimating];
     
 }
 
@@ -456,7 +492,7 @@
 }
 
 /************************
- Function that calculates the frequency a of word appearing.
+ Function that calculates the frequency of a word reappearing.
  EF is between 1.1 and 2.5
  q is rated according to a 5 point scale:
  5- Correct
@@ -471,16 +507,231 @@
     double EF_prime;
     
     EF_prime = EF - 0.8 + (0.28*q) - (0.02*pow(q,2));
-    //    EF_prime = (EF - 0.8 + (0.28*q) - (0.02*q*q));
-    //    NSLog(@"%f", EF);
-    //    NSLog(@"%f", pow(q,q));
-    //    NSLog(@"%f", EF_prime);
     return EF_prime;
 }
 
+//things to do after game has ended
+- (void) endGame {
+    UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert1 show];
+}
 
+//Sets the iamges back to blank
+- (void) resetImage {
+    UIImage *img1 = [UIImage imageNamed:@"blank.png"];
+    [imageView1 setImage:img1];
+    UIImage *img2 = [UIImage imageNamed:@"blank.png"];
+    [imageView2 setImage:img2];
+    UIImage *img3 = [UIImage imageNamed:@"blank.png"];
+    [imageView3 setImage:img3];
+}
+
+//Displays message according to number of wrongs user obtains
+- (void) wrong_answer_message: (NSString *) trim{
+    
+    Singleton *global = [Singleton globalVar];
+    
+    if(x==0){
+        [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
+        [buttonCHECK1 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
+        UIImage *img1 = [UIImage imageNamed:@"wrong.png"];
+        [imageView1 setImage:img1];
+        
+    } else if(x==1){
+        [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
+        [buttonCHECK2 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
+        UIImage *img2 = [UIImage imageNamed:@"wrong.png"];
+        [imageView2 setImage:img2];
+        
+    } else if(x==2){
+        //Number of tries exceeded
+        [self.fliteController say:[NSString stringWithFormat:@"NO MORE TRIES"] withVoice:self.secondVoiceToUse];
+        [buttonCHECK3 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
+        UIImage *img3 = [UIImage imageNamed:@"wrong.png"];
+        [imageView3 setImage:img3];
+        
+        //Stores all the words the user says incorrectly
+//        [global.troubledWords addObject:[global.answerArray objectAtIndex:j]];    
+        [global.troubledWords addObject:trim];    
+
+        
+        
+        printf("&&&&&&&&&&&&%d&&&&&&&&&&&&&&\n", x);
+        
+        int p = [global.answerArray count];
+        NSLog(@"p = %d", p);
+        NSLog(@"j = %d", j);
+        int h = p-1;
+        NSLog(@"h = %d", h);
+        
+        //No more Cue cards left
+        if (j == h){
+            if (([global.skippedWords count] == 0) && ([global.troubledWords count] == 0)){
+                [self.pocketsphinxController stopListening];
+                NSLog(@"NO MORE WORDS");
+                
+                [self endGame];
+                
+            } else {
+                [global.initialWords removeAllObjects];
+                [self check_any_skipped_or_incorrect_words_left];
+            }
+
+            
+        //Prepare for the next one
+        } else {
+            j++;
+            
+            global.index = j;
+            [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
+            
+            global.elements = [global.answerArray count];
+            global.array_index=j+1;
+            totalWORDS.text = [NSString stringWithFormat:@"%d / %u", global.array_index, global.elements];
+            
+            [self resetImage];
+            
+            x_wrong++;
+            [self display_number_of_correct_and_incorrect_answers ];
+            
+            x = -1;
+        }
+    } 
+}
+
+- (void) check_any_skipped_or_incorrect_words_left{
+    
+    Singleton *global = [Singleton globalVar];
+    
+    if ([global.skippedWords count] != 0){
+        j=0;
+        NSLog(@"Skipped words still left");
+//        global.index = j;
+        
+    } else if ([global.troubledWords count] != 0){
+        j=0;
+        NSLog(@"Troubled words still left");
+//        global.index =  j;
+        
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+//Displays the ratio of correct and incorrect answers
+- (void) display_number_of_correct_and_incorrect_answers{
+    
+    lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
+    lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
+}
+
+//Initalize all global arrays
+- (void) initialize_global_arrays{
+    
+    Singleton *global = [Singleton globalVar];
+    
+    if (global.answerArray == nil)
+    {
+        global.answerArray = [[NSMutableArray alloc] init ];
+    }
+    if (global.troubledWords == nil)
+    {
+        global.troubledWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.initialWords == nil)
+    {
+        global.initialWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.easyWords == nil)
+    {
+        global.easyWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.skippedWords == nil)
+    {
+        global.skippedWords = [[NSMutableArray alloc] init ];
+    }
+    if (global.troubledAnswers == nil)
+    {
+        global.troubledAnswers = [[NSMutableArray alloc] init ];
+    }
+    if (global.initialAnswers == nil)
+    {
+        global.initialAnswers = [[NSMutableArray alloc] init ];
+    }
+    if (global.skippedAnswers == nil)
+    {
+        global.skippedAnswers = [[NSMutableArray alloc] init ];
+    }
+}
+
+//Analyzes what the user said and evaluates accordingly
+- (void) analyze_input: (NSString *) trim withb: (NSString *) trim2{
+    Singleton *global = [Singleton globalVar];
+    
+    if([trim isEqualToString: trim2] == YES){
+        [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"CORRECT"] waitUntilDone:NO];
+        
+        //Suspend recognition so that the playback voice does not get recorded
+        [self.pocketsphinxController suspendRecognition];	
+        NSLog(@"PAUSED");
+        
+        [self.fliteController say:[NSString stringWithFormat:@"GOOD JOB"] withVoice:self.secondVoiceToUse];NSLog(@"GOOD JOB!!!");
+        
+        [buttonCHECK2 setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
+        sleep(2);
+        
+        //Increments to the next word
+        j++;
+        global.elements = [global.answerArray count];
+        global.array_index = j + 1;
+        totalWORDS.text = [NSString stringWithFormat:@"%d / %u", global.array_index, global.elements];
+        
+        global.index = j;
+        
+        //Displays next word in line
+        [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
+        
+        //Stats
+        x_right++;
+        
+        [self display_number_of_correct_and_incorrect_answers];
+        
+        //Extra Stats
+        //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
+        //lblCONFIDENCE.text = [NSString stringWithFormat:@"Confidence: %g",conf];
+        
+        [self resetImage];
+        
+        x=0;
+        
+//        [global.easyWords addObject:[global.answerArray objectAtIndex:j]];    
+        [global.easyWords addObject: trim];
+        
+        ///Checks if round 1 is over
+        if (global.initial_round_over){
+            [global.skippedWords removeObjectAtIndex:j];
+            [global.skippedAnswers removeObjectAtIndex:j];
+        }
+        
+        //Resume recognition
+        [self.pocketsphinxController resumeRecognition];
+        NSLog(@"RESUMED");
+        //Word was incorrectly said
+    } else {
+        
+        [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"INCORRECT"] waitUntilDone:NO];
+        
+        //Extra Stats
+        //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
+        //lblCONFIDENCE.text = [NSString stringWithFormat:@"Confidence: %g",conf];
+        
+        [self wrong_answer_message: trim];
+        x++;
+    }//end if
+    
+}
+
+/**************************** END FUNCTIONS **********************************/
 
 
 
@@ -504,220 +755,120 @@
 // any class in which you instantiate an OpenEarsEventsObserver and set its delegate to self.
 // An optional delegate method of OpenEarsEventsObserver which delivers the text of speech that Pocketsphinx heard and analyzed, along with its accuracy score and utterance ID.
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
+
 	NSLog(@"The received hypothesis is %@ with a score of %@ and an ID of %@", hypothesis, recognitionScore, utteranceID); // Log it.
     
-	if([hypothesis isEqualToString:@"CHANGE MODEL"]) { // If the user says "CHANGE MODEL", we will switch to the alternate model (which happens to be the dynamically generated model).
-        
-		// Here is an example of language model switching in OpenEars. Deciding on what logical basis to switch models is your responsibility.
-		// For instance, when you call a customer service line and get a response tree that takes you through different options depending on what you say to it,
-		// the models are being switched as you progress through it so that only relevant choices can be understood. The construction of that logical branching and 
-		// how to react to it is your job, OpenEars just lets you send the signal to switch the language model when you've decided it's the right time to do so.
-		
-		if(self.usingStartLanguageModel == TRUE) { // If we're on the starting model, switch to the dynamically generated one.
-			
-			// You can only change language models with ARPA grammars in OpenEars (the ones that end in .languagemodel or .DMP). 
-			// Trying to switch between JSGF models (the ones that end in .gram) will return no result.
-			[self.pocketsphinxController changeLanguageModelToFile:self.pathToDynamicallyGeneratedGrammar withDictionary:self.pathToDynamicallyGeneratedDictionary]; 
-			self.usingStartLanguageModel = FALSE;
-		} else { // If we're on the dynamically generated model, switch to the start model (this is just an example of a trigger and method for switching models).
-			[self.pocketsphinxController changeLanguageModelToFile:self.pathToGrammarToStartAppWith withDictionary:self.pathToDictionaryToStartAppWith];
-			self.usingStartLanguageModel = TRUE;
-		}
-	}        
+//	if([hypothesis isEqualToString:@"CHANGE MODEL"]) { // If the user says "CHANGE MODEL", we will switch to the alternate model (which happens to be the dynamically generated model).
+//        
+//		// Here is an example of language model switching in OpenEars. Deciding on what logical basis to switch models is your responsibility.
+//		// For instance, when you call a customer service line and get a response tree that takes you through different options depending on what you say to it,
+//		// the models are being switched as you progress through it so that only relevant choices can be understood. The construction of that logical branching and 
+//		// how to react to it is your job, OpenEars just lets you send the signal to switch the language model when you've decided it's the right time to do so.
+//		
+//		if(self.usingStartLanguageModel == TRUE) { // If we're on the starting model, switch to the dynamically generated one.
+//			
+//			// You can only change language models with ARPA grammars in OpenEars (the ones that end in .languagemodel or .DMP). 
+//			// Trying to switch between JSGF models (the ones that end in .gram) will return no result.
+//			[self.pocketsphinxController changeLanguageModelToFile:self.pathToDynamicallyGeneratedGrammar withDictionary:self.pathToDynamicallyGeneratedDictionary]; 
+//			self.usingStartLanguageModel = FALSE;
+//		} else { // If we're on the dynamically generated model, switch to the start model (this is just an example of a trigger and method for switching models).
+//			[self.pocketsphinxController changeLanguageModelToFile:self.pathToGrammarToStartAppWith withDictionary:self.pathToDictionaryToStartAppWith];
+//			self.usingStartLanguageModel = TRUE;
+//		}
+//	}        
 	
 	self.heardTextView.text = [NSString stringWithFormat:@"You said: \"%@\"", hypothesis]; // Show it in the status box.
-	
-	// This is how to use an available instance of FliteController. We're going to repeat back the command that we heard with the voice we've chosen.
-	//[self.fliteController say:[NSString stringWithFormat:@"You said %@",hypothesis] withVoice:self.secondVoiceToUse];
     
-        Singleton *global = [Singleton globalVar];
-    
-    	char const *hyp;
+    char const *hyp;
     char word[MAX_CHAR_LEN];
-    NSString *test;
+    NSString *tmp_word;
 
-    //NSMutableArray *word = [[NSMutableArray alloc] init];
-    //NSString *word;
+    Singleton *global = [Singleton globalVar];
     
-        //NSUInteger elements = [global.answerArray count] - 1;
+    NSMutableArray *test;
+
     
+    //Change up the arrays to accomodate the skipped and incorrect words
+    if (([global.skippedWords count] == 0) && ([global.troubledWords count] !=0)){
+        
+    } else if ([global.initialWords count] == 0){
+        test = global.skippedAnswers;
+        NSLog(@"InitialWord Array is EMPTY!");
+        global.initial_round_over = TRUE;
+//        NSLog(@"%@", global.initial_round_over);
+        NSLog(@"%d", global.initial_round_over);
+
+    } else {
+        test = global.initialAnswers;
+        NSLog(@"InitialWord Array is not empty");
+//        NSLog(@"%@", global.initial_round_over);
+        NSLog(@"%d", global.initial_round_over);
+    }
+    
+//    NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$---------%@", global.index);
+//    NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$---------%@", j);
+
     //Converts Objective c pointer to type const char
     hyp = [hypothesis UTF8String];
-    //word = [word UTF8String];
-
+    
     printf("What you said: %s\n", hyp);
 
-    
-    //If nothing was said or 
+//    while (([global.answerArray count]-1) != j){
+        
+    //If nothing was said or background noise heard
     if (hyp == NULL || strlen(hyp) <= 0)
     {
         //[self performSelectorOnMainThread:@selector(setStatus:) withObject:@"Sorry, Unable to Recognise, please try again" waitUntilDone:NO];
-        printf("TRY AGAIN!!!\n");
-        //[buttonSpeak setEnabled:TRUE];
-        //[aiView stopAnimating];
+        printf("Nothing was heard!!!\n");
+
         return;
     } else {
         //printf("%s: %s\n", uttid, hyp);
         fflush(stdout);
         
-        // Evaluates only the first word person said 
+        // Evaluates only the first word said 
         if (hyp) {
+            //Scans what is said and places it in the array 'word'
             sscanf(hyp, "%s", word);
             NSLog(@"WORD: %s", word);
             NSLog(@"HYP: %s",hyp);
             
-            test = [NSString stringWithFormat:@"%s", word];
+            tmp_word = [NSString stringWithFormat:@"%s", word];
             
-//            NSLog(@"Target word ----> %@, %d", [target2 objectAtIndex:j], [[target2 objectAtIndex:j] length]);
-//            NSLog(@"TEST ----->>>> %@, %d", test, [test length]);
+        
          
+            //Word answer
+//            NSString *trim = [[global.initialWords objectAtIndex:j] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            NSString *trim = [[test objectAtIndex:j] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             
-            NSString *trim = [[target2 objectAtIndex:j] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-             NSString *trim2 = [test stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            //Word said
+            NSString *trim2 = [tmp_word stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             
-//            NSLog(@" ----->>>> %@, %d", trim, [trim length]   );
-//            NSLog(@"----> %@, %d", trim2, [trim2 length]);
+            NSLog(@"Word----->>>> %@, %d", trim, [trim length]);
+            NSLog(@"Said----->>>> %@, %d", trim2, [trim2 length]);
             
-            //Compares what you said with displayed word in another language and see if it's correct
-            if([trim isEqualToString: trim2] == YES){
-                [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"CORRECT"] waitUntilDone:NO];
-                
-                //Suspend recognition so that the playback voice does not get recorded
-                [self.pocketsphinxController suspendRecognition];	
-                NSLog(@"PAUSED");
-
-                
-                [self.fliteController say:[NSString stringWithFormat:@"GOOD JOB"] withVoice:self.secondVoiceToUse];NSLog(@"GOOD JOB!!!");
-                
-                [buttonCHECK2 setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
-                sleep(2);
-                
-                //Increments to the next word
-                j++;
-                NSUInteger elements = [global.answerArray count];
-                k = j + 1;
-                totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
-                
-                global.index = j;
-                
-                //Displays next word in line
-                [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
-                //Plays audio for correct answer
-                //Reference:GeekyLemon -> http://www.youtube.com/watch?v=QuwTvg7Mi24
-                //NSString *path = [[NSBundle mainBundle] pathForResource:@"chaching" ofType:@"mp3"];
-                //AVAudioPlayer* theAudio = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL];
-                //[theAudio play];
-                
-                //Stats
-                x_right++;
-                
-                difficulty = (x_wrong) / (x_right + x_wrong);
-                
-                lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-                lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-                lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-                
-                
-
-                //Extra Stats
-                //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
-                //lblCONFIDENCE.text = [NSString stringWithFormat:@"Confidence: %g",conf];
-                
-                //Holds for 2 secs
-                //sleep(2);
-
-                
-                UIImage *img1 = [UIImage imageNamed:@"blank.png"];
-                [imageView1 setImage:img1];
-                UIImage *img2 = [UIImage imageNamed:@"blank.png"];
-                [imageView2 setImage:img2];
-                UIImage *img3 = [UIImage imageNamed:@"blank.png"];
-                [imageView3 setImage:img3];
-                
-                x=0;
-                
-                //Resume recognition
-                [self.pocketsphinxController resumeRecognition];
-                NSLog(@"RESUMED");
-            } else {
-                
-                [self performSelectorOnMainThread:@selector(Correctness:) withObject:[NSString stringWithUTF8String:"WRONG"] waitUntilDone:NO];
-                //[self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
-                //Plays audio for incorrect answer
-                //NSString *path = [[NSBundle mainBundle] pathForResource:@"splat" ofType:@"mp3"];
-                //AVAudioPlayer* theAudio = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL];
-                //[theAudio play];
-                
-                //Extra Stats
-                //lblPOSTERIOR.text = [NSString stringWithFormat:@"Posterior: %d",prob];
-                //lblCONFIDENCE.text = [NSString stringWithFormat:@"Confidence: %g",conf];
-                
-                if(x==0){
-                   [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
-                    [buttonCHECK1 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
-                   UIImage *img1 = [UIImage imageNamed:@"wrong.png"];
-                   [imageView1 setImage:img1];
-                   
-                } else if(x==1){
-                    [self.fliteController say:[NSString stringWithFormat:@"TRY AGAIN"] withVoice:self.secondVoiceToUse];
-                    [buttonCHECK2 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
-                    UIImage *img2 = [UIImage imageNamed:@"wrong.png"];
-                    [imageView2 setImage:img2];
-                    
-                } else if(x==2){
-                    //Number of tries exceeded
-                    [self.fliteController say:[NSString stringWithFormat:@"NO MORE TRIES"] withVoice:self.secondVoiceToUse];
-                    [buttonCHECK3 setImage:[UIImage imageNamed:@"wrong.png"] forState:UIControlStateNormal];
-                    UIImage *img3 = [UIImage imageNamed:@"wrong.png"];
-                    [imageView3 setImage:img3];
-                    
-                      
-                    printf("&&&&&&&&&&&&%d&&&&&&&&&&&&&&\n", x);
-                    
-                    int p = [global.answerArray count];
-                    NSLog(@"p = %d", p);
-                    NSLog(@"j = %d", j);
-                    int h = p-1;
-                    NSLog(@"h = %d", h);
-                    if (j == h){
-                        [self.pocketsphinxController stopListening];
-                        NSLog(@"NO MORE WORDS");
-                                                
-                        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"END OF GAME"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                        [alert1 show];
-                        
-                       
-                    } else {
-                    
-                    j++;
-                    
-                    global.index = j;
-                    [self performSelectorOnMainThread:@selector(Word:) withObject:[target objectAtIndex:j] waitUntilDone:NO];
-                    
-                    NSUInteger elements = [global.answerArray count];
-                    k=j+1;
-                    totalWORDS.text = [NSString stringWithFormat:@"%d / %u", k, elements];
-                    
-                    UIImage *img1 = [UIImage imageNamed:@"blank.png"];
-                    [imageView1 setImage:img1];
-                    UIImage *img2 = [UIImage imageNamed:@"blank.png"];
-                    [imageView2 setImage:img2];
-                    img3 = [UIImage imageNamed:@"blank.png"];
-                    [imageView3 setImage:img3];
-                    
-                    x_wrong++;
-                    lblRIGHT.text = [NSString stringWithFormat:@"%g",x_right];
-                    lblWRONG.text = [NSString stringWithFormat:@"%g",x_wrong];
-                    lblDIFFICULTY.text = [NSString stringWithFormat:@"Prob: %g",difficulty];
-                    
-                    x = -1;
-                    }
-                } 
-                x++;
-            }
+            [self analyze_input:trim withb:trim2];        
         }
     }//End Checking
+//    }
 }
+
+- (void) enableButtons{
+    Pass.enabled = YES;
+    Peek.enabled = YES;
+    startButton.enabled = YES;
+}
+
+-(void) disableButtons{
+    Pass.enabled = NO;
+    Peek.enabled = NO;
+    startButton.enabled = NO;
+}
+
+
+
+
+
 
 // An optional delegate method of OpenEarsEventsObserver which informs that there was an interruption to the audio session (e.g. an incoming phone call).
 - (void) audioSessionInterruptionDidBegin {
@@ -767,6 +918,7 @@
 - (void) pocketsphinxDidStartCalibration {
 	NSLog(@"Pocketsphinx calibration has started."); // Log it.
 	self.statusTextView.text = @"Status: Pocketsphinx calibration has started."; // Show it in the status box.
+    [self disableButtons];
 }
 
 // An optional delegate method of OpenEarsEventsObserver which informs that the Pocketsphinx recognition loop completed the calibration stage in its startup.
@@ -794,6 +946,8 @@
 	NSLog(@"Pocketsphinx is starting up."); // Log it.
 	//self.statusTextView.text = @"Status: Pocketsphinx is starting up."; // Show it in the status box.
     self.statusTextView.text = @"Initializing....";
+    
+    [self disableButtons];
 }
 
 // An optional delegate method of OpenEarsEventsObserver which informs that Pocketsphinx is now listening for speech.
@@ -814,6 +968,8 @@
 	NSLog(@"Pocketsphinx has detected speech."); // Log it.
 	//self.statusTextView.text = @"Status: Pocketsphinx has detected speech."; // Show it in the status box.
     self.statusTextView.text = @"Evaluating...";
+    
+    [self disableButtons];
 }
 
 // An optional delegate method of OpenEarsEventsObserver which informs that Pocketsphinx detected a second of silence, indicating the end of an utterance. 
@@ -822,6 +978,8 @@
 - (void) pocketsphinxDidDetectFinishedSpeech {
 	NSLog(@"Pocketsphinx has detected a second of silence, concluding an utterance."); // Log it.
 	self.statusTextView.text = @"Status: Pocketsphinx has detected finished speech."; // Show it in the status box.
+    
+    [self enableButtons];
 }
 
 
@@ -861,6 +1019,8 @@
 - (void) fliteDidStartSpeaking {
 	NSLog(@"Flite has started speaking"); // Log it.
 	self.statusTextView.text = @"Status: Flite has started speaking."; // Show it in the status box.
+    
+    [self disableButtons];
 }
 
 // An optional delegate method of OpenEarsEventsObserver which informs that Flite is finished speaking, most likely to be useful if debugging a
@@ -868,6 +1028,7 @@
 - (void) fliteDidFinishSpeaking {
 	NSLog(@"Flite has finished speaking"); // Log it.
 	self.statusTextView.text = @"Status: Flite has finished speaking."; // Show it in the status box.
+    [self enableButtons];
 }
 
 - (void) pocketSphinxContinuousSetupDidFail { // This can let you know that something went wrong with the recognition loop startup. Turn on OPENEARSLOGGING to learn why.
@@ -936,15 +1097,21 @@
 	//self.resumeListeningButton.hidden = TRUE;
 }
 
-/*
-- (IBAction) startButtonAction { // This is the action for the button which starts up the recognition loop again if it has been shut down.
-	[self.pocketsphinxController startListeningWithLanguageModelAtPath:self.pathToGrammarToStartAppWith dictionaryAtPath:self.pathToDictionaryToStartAppWith languageModelIsJSGF:FALSE];
-	
-	self.startButton.hidden = TRUE;
-	self.stopButton.hidden = FALSE;
-	self.suspendListeningButton.hidden = FALSE;
-	self.resumeListeningButton.hidden = TRUE;
-}*/
+- (IBAction) muteVoice {
+    
+    if(isEnabled){
+        [voiceControl setImage:[UIImage imageNamed:@"speaker.png"] forState:UIControlStateNormal];
+        NSLog(@"Voice unmuted");
+        //[self.pocketsphinxController resumeRecognition];
+        isEnabled = FALSE;
+    } else {
+        [voiceControl setImage:[UIImage imageNamed:@"speaker_mute.png"] forState:UIControlStateNormal];
+        NSLog(@"Voice muted");
+        //[self.pocketsphinxController suspendRecognition];	
+        isEnabled = TRUE;
+    }
+
+}
 
 
 #pragma mark -

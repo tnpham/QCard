@@ -25,12 +25,15 @@
     
     //Words needing reviewing
     NSMutableArray *troubledWords;
+    NSMutableArray *troubledAnswers;
     //Initial words
     NSMutableArray *initialWords;
+    NSMutableArray *initialAnswers;
     //Have no trouble with
     NSMutableArray *easyWords;
     //Skipped words
     NSMutableArray *skippedWords;
+    NSMutableArray *skippedAnswers;
     
     //AnswerView
     NSMutableArray *answerArray;
@@ -42,6 +45,13 @@
     NSMutableDictionary *courseName;
     NSMutableArray *files;
     
+    //Total number of elements (words)
+    NSUInteger elements;
+    //Current array index
+    NSUInteger array_index;
+    
+    BOOL initial_round_over;
+    
 }
 
 //SuperMemo 
@@ -51,6 +61,10 @@
 @property (nonatomic, retain) NSMutableArray *initialWords;
 @property (nonatomic, retain) NSMutableArray *easyWords;
 @property (nonatomic, retain) NSMutableArray *skippedWords;
+@property (nonatomic, retain) NSMutableArray *troubledAnswers;
+@property (nonatomic, retain) NSMutableArray *initialAnswers;
+@property (nonatomic, retain) NSMutableArray *skippedAnswers;
+
 
 
 //AnswerView
@@ -62,7 +76,10 @@
 @property (nonatomic, retain) NSMutableDictionary *courseName;
 @property (nonatomic, retain) NSMutableArray *files;
 
+@property (nonatomic) NSUInteger elements;
+@property (nonatomic) NSUInteger array_index;
 
+@property (nonatomic, assign) BOOL initial_round_over;
 
 //Global var
 + (Singleton *) globalVar;

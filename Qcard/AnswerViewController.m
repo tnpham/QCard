@@ -8,12 +8,15 @@
 
 #import "AnswerViewController.h"
 #import "Singleton.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface AnswerViewController ()
 
 @end
 
 @implementation AnswerViewController
+
+@synthesize playWord;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,11 +37,43 @@
     Singleton *global = [Singleton globalVar];
     // Do any additional setup after loading the view from its nib.
     
-    //Grabs the value at speicified index in array
-    id str = [global.answerArray objectAtIndex: global.index];
+    id str;
+    NSLog(@"GLBOALLLLLLL INDEX %d", global.index);
+    
+    if(global.initial_round_over != TRUE){
+        //Grabs the value at specified index in array
+        str = [global.initialAnswers objectAtIndex: global.index];
+        
+    } else {
+        str = [global.skippedAnswers objectAtIndex: global.index];
+    }
     
     lblANSWER.text = [NSString stringWithFormat:@"%@", str];
 
+    ////////////////////////////////////////////////////////
+    
+//    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"goodbye" ofType:@"mp3"]];
+    
+//    NSString *url = [[NSBundle mainBundle] pathForResource:[[global.answerArray objectAtIndex: global.index] lowercaseString] ofType:@"mp3"];
+//    NSString *path = [[NSBundle mainBundle] pathForResource:[[global.answerArray objectAtIndex: global.index] lowercaseString] ofType:@"mp3"];
+
+    //BROKEN
+//    NSString *path = [[NSBundle mainBundle] pathForResource:[[global.answerArray objectAtIndex: global.index] lowercaseString] ofType:@"mp3"];
+//    NSURL *url = [NSURL fileURLWithPath:path];
+//
+//    
+//    NSError *error;
+//    audioPlayer = [[AVAudioPlayer alloc]
+//                   initWithContentsOfURL:url
+//                   error:&error];
+//    if (error)
+//    {
+//        NSLog(@"Error in audioPlayer: %@", 
+//              [error localizedDescription]);
+//    } else {
+//        audioPlayer.delegate = self;
+//        [audioPlayer prepareToPlay];
+//    }
 }
 
 - (void)viewDidUnload
@@ -55,6 +90,30 @@
 
 -(IBAction)goBack{
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction) playSound{
+//    Singleton *global = [Singleton globalVar];
+    //Plays audio for correct answer
+    //Reference:GeekyLemon -> http://www.youtube.com/watch?v=QuwTvg7Mi24
+//    NSString *path = [[NSBundle mainBundle] pathForResource:[[global.answerArray objectAtIndex: global.index] lowercaseString] ofType:@"mp3"];
+//    NSLog(@"%@", [[global.answerArray objectAtIndex: global.index] lowercaseString]);
+//    NSLog(@"Method Called");
+//
+//    NSError *error = nil;    
+//    AVAudioPlayer* theAudio = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
+//    if(theAudio){
+//        [theAudio play];
+//        NSLog(@"Playing Audio");
+//
+//    }
+
+    
+    
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"hello" ofType:@"mp3"];
+//    AVAudioPlayer* theAudio = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL];
+//    [theAudio play];
+    [audioPlayer play];
 }
 
 @end

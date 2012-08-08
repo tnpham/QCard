@@ -29,6 +29,14 @@ static Singleton *globalVar= nil;
 @synthesize initialWords;
 @synthesize easyWords;
 @synthesize skippedWords;
+@synthesize troubledAnswers;
+@synthesize initialAnswers;
+@synthesize skippedAnswers;
+
+@synthesize elements;
+@synthesize array_index;
+
+@synthesize initial_round_over;
 
 #pragma mark -
 #pragma mark Singleton Methods

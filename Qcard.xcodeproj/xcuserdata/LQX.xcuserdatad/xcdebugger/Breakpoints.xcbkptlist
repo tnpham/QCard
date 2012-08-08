@@ -8,24 +8,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/ViewController.m"
-         timestampString = "365104168.487931"
+         timestampString = "365699513.897176"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "366"
-         endingLineNumber = "366"
-         landmarkName = "@implementation ViewController"
-         landmarkType = "3">
+         startingLineNumber = "360"
+         endingLineNumber = "360"
+         landmarkName = "-viewDidLoad"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/Singleton.h"
-         timestampString = "365099115.562466"
+         timestampString = "365623409.556648"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "35"
-         endingLineNumber = "35"
+         startingLineNumber = "38"
+         endingLineNumber = "38"
          landmarkName = "@interface Singleton"
          landmarkType = "2">
       </FileBreakpoint>
@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/AnswerViewController.m"
-         timestampString = "355165767.85228"
+         timestampString = "365362938.91209"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "16"
-         endingLineNumber = "16"
+         startingLineNumber = "17"
+         endingLineNumber = "17"
          landmarkName = "@implementation AnswerViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/ViewController.h"
-         timestampString = "361388451.427281"
+         timestampString = "365458082.762091"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "77"
-         endingLineNumber = "77"
+         startingLineNumber = "75"
+         endingLineNumber = "75"
          landmarkName = "@interface ViewController"
          landmarkType = "2">
       </FileBreakpoint>
@@ -59,25 +59,12 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Qcard/ViewController.m"
-         timestampString = "365113933.972917"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "541"
-         endingLineNumber = "541"
-         landmarkName = "-pocketsphinxDidReceiveHypothesis:recognitionScore:utteranceID:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364925564.087015"
+         timestampString = "366066333.814116"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "183"
-         endingLineNumber = "183"
+         startingLineNumber = "147"
+         endingLineNumber = "147"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364925564.087015"
+         timestampString = "366066333.814116"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "171"
-         endingLineNumber = "171"
+         startingLineNumber = "135"
+         endingLineNumber = "135"
          landmarkName = "-tableView:titleForHeaderInSection:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364925564.087015"
+         timestampString = "366066333.814116"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "172"
-         endingLineNumber = "172"
+         startingLineNumber = "136"
+         endingLineNumber = "136"
          landmarkName = "-tableView:titleForHeaderInSection:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -125,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/SettingViewController.m"
-         timestampString = "364929904.344365"
+         timestampString = "366066333.814116"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "46"
-         endingLineNumber = "46"
+         startingLineNumber = "52"
+         endingLineNumber = "52"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -142,20 +129,31 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "43"
-         endingLineNumber = "43"
-         landmarkName = "pocketsphinxController"
-         landmarkType = "19">
+         endingLineNumber = "43">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/ViewController.m"
-         timestampString = "365102677.781486"
+         timestampString = "365615245.576014"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "119"
-         endingLineNumber = "119"
+         startingLineNumber = "123"
+         endingLineNumber = "123"
+         landmarkName = "-openEarsEventsObserver"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Qcard/AnswerViewController.m"
+         timestampString = "365702596.310648"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "55"
+         endingLineNumber = "55"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -164,12 +162,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Qcard/ViewController.m"
-         timestampString = "365113933.972917"
+         timestampString = "365715279.139725"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "690"
-         endingLineNumber = "690"
-         landmarkName = "-pocketsphinxDidReceiveHypothesis:recognitionScore:utteranceID:"
+         startingLineNumber = "591"
+         endingLineNumber = "591"
+         landmarkName = "-wrong_answer_message:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Qcard/SettingViewController.m"
+         timestampString = "366138981.26099"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "261"
+         endingLineNumber = "261"
+         landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

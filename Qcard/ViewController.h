@@ -72,12 +72,9 @@
     int32_t sil;
     int32_t sp;
 
-    //@public char *target[14];
-    //@public int j;
     NSMutableArray *target;
     NSMutableArray *target2;
-    //char *target[14];
-    //char *target2[14];
+
     int j;
     int x;
     int k;
@@ -85,8 +82,6 @@
     
     double x_wrong;
 	double x_right;
-	//Higher numbers means harder, will appear more often where 0 <= diff <= 1
-	double difficulty;
     
 	// These three are important OpenEars classes that ViewController demonstrates the use of. There is a fourth important class (LanguageModelGenerator) demonstrated
 	// inside the ViewController implementation in the method viewDidLoad.
@@ -115,6 +110,7 @@
     
     //Buttons
     IBOutlet UIButton *Pass;
+    IBOutlet UIButton *Peek;
     IBOutlet UIButton *buttonANSWER;
     
     IBOutlet UIButton *buttonCHECK1;
@@ -138,13 +134,15 @@
 	// Our NSTimer that will help us read and display the input and output levels without locking the UI
 	NSTimer *uiUpdateTimer;
     
-    
-    
     IBOutlet UIImageView * imageView1;
     IBOutlet UIImageView * imageView2;
     IBOutlet UIImageView * imageView3;
     
     BOOL isPaused;
+    BOOL isEnabled;
+    
+    IBOutlet UIButton *voiceControl;
+    IBOutlet UIButton *gameOver;
     
 }
 
@@ -154,10 +152,11 @@
 - (IBAction) suspendListeningButtonAction;
 - (IBAction) resumeListeningButtonAction;
 
+- (IBAction) muteVoice;
 
--(IBAction) Pass:(id)sender;
+- (IBAction) Pass:(id)sender;
 
--(IBAction) switch2answer;
+- (IBAction) switch2answer;
 
 // Example for reading out the input audio levels without locking the UI using an NSTimer
 
@@ -181,7 +180,11 @@
 @property (nonatomic, strong) IBOutlet UILabel *fliteDbLabel;
 
 @property (nonatomic, assign) BOOL usingStartLanguageModel;
+//recognition 
 @property (nonatomic, assign) BOOL isPaused;
+//voice
+@property (nonatomic, assign) BOOL isEnabled;
+
 
 // Things which help us show off the dynamic language features.
 @property (nonatomic, copy) NSString *pathToGrammarToStartAppWith;
@@ -196,8 +199,7 @@
 // Our NSTimer that will help us read and display the input and output levels without locking the UI
 @property (nonatomic, strong) 	NSTimer *uiUpdateTimer;
 
-//@property (copy) ViewController *target;
-//@property (nonatomic, readwrite) int j;
-//@property (nonatomic, retain) int j;
+@property (nonatomic, strong) IBOutlet UIButton *voiceControl;
+@property (nonatomic, strong) IBOutlet UIButton *gameOver;
 
 @end

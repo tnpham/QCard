@@ -596,11 +596,16 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="muteVoice" destination="2" eventType="touchUpInside" id="ceN-MW-uUp"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="Pass" destination="t8t-ja-kED" id="nDw-sN-e48"/>
+                        <outlet property="Peek" destination="UqM-By-mcx" id="VRE-c5-4ka"/>
                         <outlet property="heardTextView" destination="LNr-Jh-oPo" id="xVO-IU-9Wj"/>
                         <outlet property="imageView1" destination="Bms-Ug-7A4" id="4fy-tQ-zh7"/>
                         <outlet property="imageView2" destination="fgV-dr-NIT" id="W8V-IE-B1z"/>
@@ -614,6 +619,7 @@
                         <outlet property="startButton" destination="oo6-P8-2kl" id="bjY-9i-UEI"/>
                         <outlet property="statusTextView" destination="CPg-BY-Zw9" id="UKd-pA-zeA"/>
                         <outlet property="totalWORDS" destination="g48-mr-Of8" id="Ml1-eH-Kia"/>
+                        <outlet property="voiceControl" destination="lpo-it-oPf" id="XbU-wJ-LoH"/>
                     </connections>
                 </viewController>
             </objects>
@@ -646,6 +652,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="playSound" destination="K0b-We-ixA" eventType="touchUpInside" id="3kJ-S9-Z78"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="TQU-Bu-Ue6">
                                 <rect key="frame" x="124" y="338" width="72" height="37"/>
@@ -667,6 +676,7 @@
                     </view>
                     <connections>
                         <outlet property="lblANSWER" destination="3sA-6e-uXH" id="SrD-vb-mfI"/>
+                        <outlet property="playWord" destination="ZFl-WT-3mX" id="PRR-HY-xc6"/>
                     </connections>
                 </viewController>
             </objects>
@@ -691,7 +701,9 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AnswerViewController.h"/>
             <relationships>
                 <relationship kind="action" name="goBack"/>
+                <relationship kind="action" name="playSound"/>
                 <relationship kind="outlet" name="lblANSWER" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="playWord" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="AuthenticateViewController" superclassName="UIViewController">
@@ -737,17 +749,20 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
                 <relationship kind="action" name="Pass:"/>
+                <relationship kind="action" name="muteVoice"/>
                 <relationship kind="action" name="resumeListeningButtonAction"/>
                 <relationship kind="action" name="startButtonAction"/>
                 <relationship kind="action" name="stopButtonAction"/>
                 <relationship kind="action" name="suspendListeningButtonAction"/>
                 <relationship kind="action" name="switch2answer"/>
                 <relationship kind="outlet" name="Pass" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="Peek" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="buttonANSWER" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="buttonCHECK1" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="buttonCHECK2" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="buttonCHECK3" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="fliteDbLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="gameOver" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="heardTextView" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="imageView1" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="imageView2" candidateClass="UIImageView"/>
@@ -764,6 +779,7 @@
                 <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="suspendListeningButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="totalWORDS" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="voiceControl" candidateClass="UIButton"/>
             </relationships>
         </class>
     </classes>
