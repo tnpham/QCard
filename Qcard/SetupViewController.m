@@ -44,8 +44,8 @@
 	[langarrayNo addObject:@" RU "];
 	[langarrayNo addObject:@" AU "];
     
-    setarrayNo = [[NSMutableArray alloc] init];
     
+    setarrayNo = [[NSMutableArray alloc] init];
 	[setarrayNo addObject:@" 15 "];
 	[setarrayNo addObject:@" 30 "];
 	[setarrayNo addObject:@" 45 "];

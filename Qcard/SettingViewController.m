@@ -10,6 +10,8 @@
 #import "Singleton.h"
 #import "sqlite3.h"
 //#import "CollapsableTableView.h"
+#import "AuthenticateViewController.h"
+
 
 @interface NSURLRequest (DummyInterface)
 + (BOOL)allowsAnyHTTPSCertificateForHost:(NSString*)host;
@@ -28,6 +30,7 @@
     [super viewDidLoad];
     Singleton *global = [Singleton globalVar];
 
+    
     NSArray *keys = [global.courseName allKeys];
     id key, value;
     
@@ -35,6 +38,7 @@
         NSLog(@"%@ is %@", key, [global.courseName objectForKey:key]);
         NSLog(@"BreaK");
     }
+
     
     listOfItems = [[NSMutableArray alloc] init];
 
@@ -167,6 +171,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    //Grabs the stored default value of the server name
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *serverName = [prefs stringForKey:@"server"];
+    
     NSString *rval;
     
     //Grab row number
@@ -177,11 +185,11 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSLog(@"cell text: %@", cell.textLabel.text); 
     
-    NSString *url_file = [NSString stringWithFormat:@"https://129.128.136.68/moodle/mod/qcardloader/infoControl.php?filename=%@", cell.textLabel.text];
+    NSString *url_file = [NSString stringWithFormat:@"https://%@/moodle/mod/qcardloader/infoControl.php?filename=%@", serverName, cell.textLabel.text];
 
     NSURL *URL_file = [NSURL URLWithString:url_file];
     
-    NSLog(@"%@", url_file);
+    NSLog(@"url_file: %@", url_file);
     
     NSURLRequest *request = [NSURLRequest requestWithURL:URL_file];
     NSURLResponse *response;
@@ -189,17 +197,39 @@
     [NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[URL_file host]];
     NSData *file_content = [NSURLConnection sendSynchronousRequest:request
                                          returningResponse:&response error:&error];
+    //Gives date and time and time zone
+    NSDate *today = [NSDate date];
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat: @"EEEE MMMM d, YYYY h:mm a, zzz"];
+    
+    NSString *courseName;
+    NSString *fileContent;
     
     if(file_content){
         NSLog(@"FILE RETRIEVED!");
 //        NSLog(@"%@", file_content);
         
         if(error){
+            NSLog(@"Error while retrieving file");
             
         } else {
-            //Contians the return value(file content) 
+            //Contains the return value(file content) 
             rval = [[NSString alloc] initWithData: file_content encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", rval);
+            NSLog(@"Rval b4: %@", rval);
+            
+//            NSRange wordRange = NSMakeRange(0,1);
+//            NSArray *firstWord = [[rval componentsSeparatedByString:@"#"] subarrayWithRange:wordRange];
+//
+//            NSLog(@"FIrst Word: %@", firstWord);
+
+            NSArray *str = [rval componentsSeparatedByString:@"#"];
+            NSEnumerator *enumz = [str objectEnumerator];
+            
+            courseName = [enumz nextObject];
+            NSLog(@"----------%@",courseName);
+            fileContent = [enumz nextObject];
+            NSLog(@"----------%@",fileContent);
+            
             
             //Checkmarks if user downloaded the file
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -212,11 +242,7 @@
             databaseName = @"test.db";
             NSFileManager *fileManager = [NSFileManager defaultManager];
             
-            //Gives date and time and time zone
-            NSDate *today = [NSDate date];
-            NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-            [dateFormat setDateFormat: @"EEEE MMMM d, YYYY h:mm a, zzz"];
-            
+ 
             // Get the path to the documents directory and append the databaseName
             NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *documentsDir = [documentPaths objectAtIndex:0];
@@ -257,37 +283,98 @@
             //Successfully opened database
             } else {
                 NSLog(@"Database successfully opened");
-                NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO files(content, id, downloaded, filename, filesize, courseid) VALUES ('%@', '%d', '%d', '%@', '%d', '%d' )", rval, 1, 1, cell.textLabel.text, 1, 1];
-
-                const char *sql = [insertSQL UTF8String];
-                sqlite3_stmt *sqlStatement;
                 
-                //Creates the object
-                if (sqlite3_prepare_v2(database, sql, -1, &sqlStatement, NULL) != SQLITE_OK){
-                    NSLog(@"Problem with prep  statement");
-                    NSLog(@"%s", sqlite3_errmsg(database));
-                    NSLog(@"%d", sqlite3_prepare_v2(database, sql, -1, &sqlStatement, NULL));
-
-                } else { 
-                    //evaluates sql statement
-                    if (sqlite3_step(sqlStatement) == SQLITE_DONE){
-                        //deletes prepared statement(instance of object representing a single sql statment) to avoid resource leaks
-                        sqlite3_finalize(sqlStatement);
-                        //close database
-                        sqlite3_close(database);
-                        NSLog(@"SQLITE DONE");
-                        
-                    }
-                    NSLog(@"SQLITE == OK");
+                char *errMsg;
+                
+                //Creates table if it does not exist already
+                const char *sql_stmt = "CREATE TABLE IF NOT EXISTS FILES (ID INTEGER PRIMARY KEY AUTOINCREMENT, COURSENAME TEXT, FILENAME TEXT, CONTENT TEXT, DOWNLOADED NUMERIC)";
+//                  const char *test = "CREATE TABLE IF NOT EXISTS TEST (ID INTEGER PRIMARY KEY AUTOINCREMENT, COURSEID NUMERIC, FILENAME TEXT, CONTENT TEXT, FILESIZE NUMERIC, DOWNLOADED NUMERIC)";
+                
+//                if (sqlite3_exec ( database, test, NULL, NULL, &errMsg) != SQLITE_OK){
+//                    NSLog(@"Failed to create table");
+//                    }
+                if (sqlite3_exec ( database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK){
+                    NSLog(@"Failed to create table");
                     
+                } else {
+                
+                    //NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO files(content, id, downloaded, filename, filesize, courseid) VALUES ('%@', '%d', '%d', '%@', '%d', '%d' )", fileContent, 1, NULL, cell.textLabel.text, 1, 1];
+                    
+                    //Inserts record into table
+                    NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO FILES(ID, COURSENAME, FILENAME, CONTENT, DOWNLOADED) VALUES ('%d', '%@', '%@', '%@', '%d')", NULL, courseName, cell.textLabel.text, fileContent, 1];
+
+                    
+                    NSLog(@"$$$inserted: %@", insertSQL);
+                    
+                    const char *sql = [insertSQL UTF8String];
+                    sqlite3_stmt *sqlStatement;
+                    
+                    //Creates the object and checks if it is ok
+                    if (sqlite3_prepare_v2(database, sql, -1, &sqlStatement, NULL) != SQLITE_OK){
+                        NSLog(@"Problem with prep  statement");
+                        NSLog(@"%s", sqlite3_errmsg(database));
+                        NSLog(@"%d", sqlite3_prepare_v2(database, sql, -1, &sqlStatement, NULL));
+
+                    } else { 
+                        //evaluates sql statement
+                        if (sqlite3_step(sqlStatement) == SQLITE_DONE){
+                            //deletes prepared statement(instance of object representing a single sql statment) to avoid resource leaks
+                            sqlite3_finalize(sqlStatement);
+                            //close database
+                            sqlite3_close(database);
+                            NSLog(@"SQLITE DONE");
+                            
+                        }
+                        NSLog(@"SQLITE == OK");
+                        
+                        /*********************Testing data retrieval
+                        **********************/
+                         
+                        const char *dbpath = [databasePath UTF8String];
+                        sqlite3_stmt *statement;
+                        if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+                        {
+                            NSString *querySQL = [NSString stringWithFormat: @"SELECT content FROM files WHERE filename=\"%@\"",     cell.textLabel.text];
+                            
+                            const char *query_stmt = [querySQL UTF8String];
+                            
+                            if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                            {
+                                if (sqlite3_step(statement) == SQLITE_ROW)
+                                {
+                                    NSString *addressField = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                                    //address.text = addressField;
+                                    
+    //                                NSString *phoneField = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                                    //phone.text = phoneField;
+    //                                self.addressLabel.text = [NSString stringWithFormat:@"Address is %@ and Contact Number is %@", addressField, phoneField];
+    //                                status.text = @"Match found";
+                                    NSLog(@"PROBABILITY 1000");
+    //                                NSLog([NSString stringWithFormat:@"Address is %@ and Contact Number is %@", addressField, phoneField]);
+                                    
+                                    UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"Address is %@ and Contact Number is %@", addressField]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                    [alert1 show];
+                                    
+                                } else {
+    //                                status.text = @"Match not found";
+
+                                }
+                                sqlite3_finalize(statement);
+                            }
+                            sqlite3_close(database);
+                        }
+                        /**********************
+                        *********************/
+                    }
                 }
-            }
+            }//end else
         }
     //Files were not retrieved
     } else {
         NSLog(@"NOT RETRIEVED!");
 
         cell.accessoryType = UITableViewCellAccessoryNone;
+        
     }
     //Animates the delselecting of a row after it is selected
     [tableView deselectRowAtIndexPath: indexPath animated:YES];

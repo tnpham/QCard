@@ -52,6 +52,8 @@
     
     BOOL initial_round_over;
     
+    NSString *serverName;
+    
 }
 
 //SuperMemo 
@@ -80,6 +82,8 @@
 @property (nonatomic) NSUInteger array_index;
 
 @property (nonatomic, assign) BOOL initial_round_over;
+
+@property (nonatomic, copy) NSString *serverName;
 
 //Global var
 + (Singleton *) globalVar;

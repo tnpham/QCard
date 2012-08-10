@@ -45,6 +45,7 @@
 #import <OpenEars/LanguageModelGenerator.h>
 
 #import "Singleton.h"
+#import "sqlite3.h"
 
 @implementation ViewController
 
@@ -126,6 +127,7 @@
 
 #pragma mark -
 #pragma mark View Lifecycle
+
 - (void)viewDidLoad {
     //Global variable to store words into array
     Singleton *global = [Singleton globalVar];
@@ -167,8 +169,94 @@
     int i=0;
     j=0;
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"8109" ofType:@"txt"];
-    NSString *string = [[NSString alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:NULL];
+    /*********************Testing data retrieval
+     **********************/
+    NSError *error1 = nil;
+    //Method 2
+    // Database variables
+    NSString *databaseName;
+    NSString *databasePath;
+    // Setup some globals
+    databaseName = @"test.db";
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    
+    // Get the path to the documents directory and append the databaseName
+    NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [documentPaths objectAtIndex:0];
+    databasePath = [documentsDir stringByAppendingPathComponent:databaseName];
+    NSLog(@"DatabasePath: %@", databasePath);
+    
+    //Checks if file exists at this path
+    BOOL exist = [fileManager fileExistsAtPath: databasePath];
+    
+    if(!exist){
+        NSLog(@"DATABASE NOT WRITABLE");
+        NSString *bundle_path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"db"];
+        //Copy path
+        exist = [fileManager copyItemAtPath:bundle_path toPath:databasePath error:&error1];
+        if (!exist){
+            NSLog(@"FAILED!");
+        } else {
+            NSLog(@"SUCCESSFULLY COPIED");
+        }
+    } else {
+        NSLog(@"DATABASE WRITABLE");
+    }
+    
+    
+    //Method 1
+    sqlite3 *database;
+    NSString *string;
+    //Open the database
+    int result = sqlite3_open([databasePath UTF8String], &database);
+    NSLog(@"DB Result: %d", result);
+    
+    //Database failed to open or DNE
+    if(result != SQLITE_OK){
+        //Closes database
+        sqlite3_close(database);
+        
+        NSLog(@"DATABASE FAILED TO OPEN");
+        
+        //Successfully opened database
+    } else {
+        
+        const char *dbpath = [databasePath UTF8String];
+        sqlite3_stmt *statement;
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+        {
+//            NSString *querySQL = [NSString stringWithFormat: @"SELECT content FROM files WHERE filename=\"%@\"", cell.textLabel.text];
+            NSString *querySQL = [NSString stringWithFormat: @"SELECT content FROM files WHERE filename=\"masterfile.txt\""];
+
+            
+            const char *query_stmt = [querySQL UTF8String];
+            
+            if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+                if (sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    NSString *content = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                    
+                    string = content;
+                    NSLog(@"PROBABILITY 1000");
+                    
+                    UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"Content string is: %@ ", string]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert1 show];
+                    
+                } else {
+                    
+                }
+                sqlite3_finalize(statement);
+            }
+            sqlite3_close(database);
+        }
+    }
+    /**********************
+     *********************/
+    
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"8109" ofType:@"txt"];
+//    NSString *string = [[NSString alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:NULL];
     
     NSArray *lines = [string componentsSeparatedByString:@"\n"]; // each line, adjust character for line endings
     
@@ -367,6 +455,10 @@
 	self.stopButton.hidden = TRUE;
 	self.suspendListeningButton.hidden = TRUE;
 	self.resumeListeningButton.hidden = TRUE;
+    
+    
+    
+ 
 }
 
 

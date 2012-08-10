@@ -68,8 +68,9 @@
         NSLog(@"wifi");
     } else {
         NSLog(@"No wifi detected, please connect to view");
-        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Wifi undetected. Please connect to log in."delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert1 show];
+
+        [self message:@"Wifi undetected. Please connect to log in."];
+
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -202,80 +203,106 @@
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             hud.labelText = @"Authenticating...";
         
-        
+             NSArray *file;
             //Have a setting where you can trust the certificate or not.
             //popup of confirmation to bypass certificate
             if (error)
             {
                 NSLog(@"%@", [error localizedDescription]);
-                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Could not connect to server"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert1 show];
                 NSLog(@"Could not connect to server");
+                [self message:@"COuld not connect to server"];
+
                 
                 //Hide Loader
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                 
             } else {
-                /*
-                NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSLog(@"%@", result);*/
-                
                 //Grabs the return value
                 rval = [[NSString alloc]initWithData: data encoding:NSUTF8StringEncoding];
+                NSLog(@"RVAL: %@",rval);
                 
-                NSLog(@"%@",rval);
-                
-                //Grabs all the available files
-                NSArray *file = [rval componentsSeparatedByString:@"\n"];
-                
-                NSLog(@"%i", [file count]);
-
-                //Initializes the array
-                if (global.courseName == nil)
-                {
-                    //global.courseName = [[NSMutableArray alloc] init ];
-                    //global.courseName = [NSMutableDictionary dictionary];
-                    global.courseName = [[NSMutableDictionary alloc] init];
+                    NSLog(@"%@",rval);
                     
-                }
-                if (global.files == nil)
-                {
-                    global.files = [[NSMutableArray alloc] init]; 
-                    NSLog(@"Allocated");
-                }
+                    //Grabs all the available files
+                    file = [rval componentsSeparatedByString:@"\n"];
+                    
+                    NSLog(@"%i", [file count]);
                 
-                //Stores the files with their respective courses
+                if ([[file objectAtIndex:0] isEqualToString: @"empty"]){
+                    //Hide Loader
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+  
+                    [self message:@"No files found"];
 
-                int i=1;
-                
-                while (i<[file count]){
-//                for (int i=1; i<[file count]; i++){
-                    if ([[file objectAtIndex:i] isEqualToString: @"course:"]){
-                        NSLog(@"Coursetest");
-                        //Increments to get the course name
-                        i++;
-                        //Temp holder for course
-                        course = [file objectAtIndex:i];
-                        NSLog(@"&&&---%@---&&&", course);
-                        //Creates a new array to store all the file names
+                    //checks if check box is checked
+                    [self checked];
+                    
+                } else if ([[file objectAtIndex:0] isEqualToString: @"DNE"]){
+                    //Hide Loader
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+                    [self message:@"Username does not exist"];
+               
+                    
+                    //checks if check box is checked
+                    [self checked];
+                    
+                } else if([[file objectAtIndex:0] isEqualToString: @"true"]){
+                    //Initializes the array
+                    if (global.courseName == nil)
+                    {
+                        global.courseName = [[NSMutableDictionary alloc] init];
+                        
+                    }
+                    if (global.files == nil)
+                    {
                         global.files = [[NSMutableArray alloc] init]; 
-
+                        NSLog(@"Allocated");
                     }
                     
-                    if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
-                        //Increments to retrieve the file name
+                    //Stores the files with their respective courses
+
+                    int i=1;
+                    
+                    while (i<[file count]){
+                        if ([[file objectAtIndex:i] isEqualToString: @"course:"]){
+                            NSLog(@"Coursetest");
+                            //Increments to get the course name
+                            i++;
+                            //Temp holder for course
+                            course = [file objectAtIndex:i];
+                            NSLog(@"&&&---%@---&&&", course);
+                            //Creates a new array to store all the file names
+                            global.files = [[NSMutableArray alloc] init]; 
+
+                        }
+                        
+                        if ([[file objectAtIndex:i] isEqualToString: @"file:"]){
+                            //Increments to retrieve the file name
+                            i++;
+                            NSLog(@"File: %@", [file objectAtIndex:i]);
+                            //Add file names to array
+                            [global.files addObject:[file objectAtIndex:i]];
+                            NSLog(@"Added %@", [file objectAtIndex:i]);
+                            
+                        }
+                        
+                        //Stores the courses and their respective files
+                        [global.courseName setObject:global.files forKey:course];
+
                         i++;
-                        NSLog(@"File: %@", [file objectAtIndex:i]);
-                        //Add file names to array
-                        [global.files addObject:[file objectAtIndex:i]];
-                        NSLog(@"Added %@", [file objectAtIndex:i]);
                     }
+                } else if ([[file objectAtIndex:0] isEqualToString: @"false"]){
+                    //Hide Loader
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
                     
-                    //Stores the courses and their respective files
-                    [global.courseName setObject:global.files forKey:course];
+                    [self message:@"Invalid username or password"];
 
-                    i++;
+                    //checks if check box is checked
+                    [self checked];
+                    
                 }
+                
                 NSLog(@"File Ended");
                 NSLog(@"%i", [global.courseName count]);
 
@@ -283,72 +310,108 @@
 
             
             //check if user is valid
-            if ([[file objectAtIndex:0] isEqualToString: @"true"]){
-                //Hide Loader
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                
-                //Changes to the next view
-                [self performSegueWithIdentifier:@"validatedsegue" sender: self];
-                NSLog(@"Access Granted");
-
-                
-                
-                
-            } else if ([[file objectAtIndex:0] isEqualToString: @"DNE"]){
-                //Hide Loader
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                
-                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Username does not exist" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert1 show];
-                
-            } else {
-                //Hide Loader
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-
-                //Alerts user something is wrong
-                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert1 show];
-                NSLog(@"Invalid username or password");
-                
-                if (isChecked == 1){
-
-                    NSLog(@"YAY");
-                    NSString *usernameField = [username  text];
-                    NSString *passwordField = [password text];
-                    NSString *serverField = [servername text];
-                    
-                    NSUserDefaults *defaultData = [NSUserDefaults standardUserDefaults];
-                    
-                    [defaultData setObject:usernameField forKey:@"username"];
-                    [defaultData setObject:passwordField forKey:@"password"];
-                    [defaultData setObject:serverField forKey:@"server"];
-                    
-                    [defaultData synchronize];
-                }
-            }
+//            if ([[file objectAtIndex:0] isEqualToString: @"true"]){
+//                //Hide Loader
+//                [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                
+//                //does not proceed since no files were found
+//                if ([[file objectAtIndex:1] isEqualToString: @"empty"]){
+//                    UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"No files found" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                    [alert1 show];
+//                    //checks if check box is checked
+//                    [self checked];
+//                    
+//                } else {
+//                    //Changes to the next view
+//                    [self performSegueWithIdentifier:@"validatedsegue" sender: self];
+//                    NSLog(@"Access Granted");
+//                    //checks if check box is checked
+//                    [self checked];
+//                }
+//                
+//            } else if ([[file objectAtIndex:0] isEqualToString: @"DNE"]){
+//                //Hide Loader
+//                [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                
+//                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Username does not exist" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                [alert1 show];
+//                
+//            } else {
+//                //Hide Loader
+//                [MBProgressHUD hideHUDForView:self.view animated:YES];
+//
+//                //Alerts user something is wrong
+//                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                [alert1 show];
+//                NSLog(@"Invalid username or password");
+//            }
         }
         
     //Displays error message when either username or password is invalid
     } else {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
 
-        
-        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert1 show];
+        [self message:@"Invalid username or password"];
+
         
     }
 }
+
+//Saves user default values if the checkbox is checked
+- (void) checked{
+    if (isChecked == 1){
+        
+        NSLog(@"YAY");
+        NSString *usernameField = [username  text];
+        NSString *passwordField = [password text];
+        NSString *serverField = [servername text];
+        
+        NSUserDefaults *defaultData = [NSUserDefaults standardUserDefaults];
+        
+        [defaultData setObject:usernameField forKey:@"username"];
+        [defaultData setObject:passwordField forKey:@"password"];
+        [defaultData setObject:serverField forKey:@"server"];
+        
+        //Saves the state of the NSUserDefault values
+        [defaultData synchronize];
+    }
+}
+
+//Displays a message according to the outcome
+- (void) message: (NSString *) msg{
+    UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"%@",msg] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert1 show];
+    
+    UILabel *theBody = [alert1 valueForKey:@"_bodyTextLabel"];
+    [theBody setTextColor:[UIColor orangeColor]];
+    
+    UIImage *theImage = [UIImage imageNamed:@"oohoo1.png"];
+    theImage = [theImage stretchableImageWithLeftCapWidth:16 topCapHeight:16];
+    CGSize theSize = [alert1 frame].size;
+    
+    UIGraphicsBeginImageContext(theSize);
+    [theImage drawInRect:CGRectMake(0, 0, theSize.width, theSize.height)];
+    theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+   // [[alert1 layer] setContents:[theImage CGImage]];
+}
+
 
 //http://www.iphonedevsdk.com/forum/iphone-sdk-development/2982-2-button-uialertview-button-pressed.html
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // the user clicked one of the OK/Cancel buttons
     if (buttonIndex == 0)
     {
-        NSLog(@"OMGGG OK");
+        NSLog(@"button0");
     }
-    else
+    else if(buttonIndex == 1)
     {
-        NSLog(@"OMGGG Cancel");
+        NSLog(@"button1");
+    } 
+    else if(buttonIndex == 2)
+    {
+        NSLog(@"button2");
     }
 }
 
