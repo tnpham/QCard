@@ -185,7 +185,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSLog(@"cell text: %@", cell.textLabel.text); 
     
-    NSString *url_file = [NSString stringWithFormat:@"https://%@/moodle/mod/qcardloader/infoControl.php?filename=%@", serverName, cell.textLabel.text];
+    NSString *url_file = [NSString stringWithFormat:@"https://%@/moodle/mod/qcardloader/infoControl.php?filename=%@&request=app", serverName, cell.textLabel.text];
 
     NSURL *URL_file = [NSURL URLWithString:url_file];
     
@@ -266,7 +266,6 @@
                 NSLog(@"DATABASE WRITABLE");
             }
             
-            
             //Method 1
             sqlite3 *database;
             //Open the database
@@ -300,11 +299,11 @@
                 
                     //NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO files(content, id, downloaded, filename, filesize, courseid) VALUES ('%@', '%d', '%d', '%@', '%d', '%d' )", fileContent, 1, NULL, cell.textLabel.text, 1, 1];
                     
-                    //Inserts record into table
+                    //create record inserting string
                     NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO FILES(ID, COURSENAME, FILENAME, CONTENT, DOWNLOADED) VALUES ('%d', '%@', '%@', '%@', '%d')", NULL, courseName, cell.textLabel.text, fileContent, 1];
 
                     
-                    NSLog(@"$$$inserted: %@", insertSQL);
+                    NSLog(@"$$$string to insert: %@", insertSQL);
                     
                     const char *sql = [insertSQL UTF8String];
                     sqlite3_stmt *sqlStatement;

@@ -137,7 +137,10 @@
     NSLog(@"tset %f", pow(2,4));
     
     isPaused = FALSE;
-    global.initial_round_over = FALSE;
+    global.initial_round = TRUE;
+    global.skipped_round = FALSE;
+    global.incorrect_round = FALSE;
+
     
     //NSData *dbFile = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://www.someurl.com/DatabaseName.sqlite"]];
     NSData *dbFile = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:@"https://github.com/ccgus/fmdb/blob/master/src/FMDatabase.h"]];
@@ -227,7 +230,7 @@
         if (sqlite3_open(dbpath, &database) == SQLITE_OK)
         {
 //            NSString *querySQL = [NSString stringWithFormat: @"SELECT content FROM files WHERE filename=\"%@\"", cell.textLabel.text];
-            NSString *querySQL = [NSString stringWithFormat: @"SELECT content FROM files WHERE filename=\"masterfile.txt\""];
+            NSString *querySQL = [NSString stringWithFormat: @"SELECT content FROM files WHERE filename=\"3443.txt\""];
 
             
             const char *query_stmt = [querySQL UTF8String];
@@ -245,7 +248,7 @@
                     [alert1 show];
                     
                 } else {
-                    
+                    NSLog(@"No content found!");
                 }
                 sqlite3_finalize(statement);
             }
@@ -500,32 +503,28 @@
         } else {
             [global.initialWords removeAllObjects];
             [self check_any_skipped_or_incorrect_words_left];
-            global.initial_round_over = TRUE;
+            global.initial_round = TRUE;
         }
 
         NSLog(@"Skipped Words: %@", global.skippedWords);
         
     } else {
         /******
-         ******
-         ******
          BIG BUG when looping second time
-         *****
-         *****
          *****/
         
-        //Start a new round with skipped and inccorect words
-        if (global.initial_round_over == TRUE){
+        //Start a new round with skipped and incorrect words
+        if (global.initial_round == TRUE){
             //Prints out next word
             NSLog(@"value of j: %d", j);
 //            j++;
 //            global.index = j;
-            NSLog(@"value of j: %d", j);
-            NSLog(@"value of gindex: %d", global.index);
 
             [self performSelectorOnMainThread:@selector(Word:) withObject:[global.skippedWords objectAtIndex:j]waitUntilDone:NO];
             j++;
             global.index = j;
+            NSLog(@"value of j: %d", j);
+            NSLog(@"value of gindex: %d", global.index);
             
 //            global.elements = [global.answerArray count];
 //            global.array_index=j+1;
@@ -555,10 +554,31 @@
             
             [self resetImage];
             
-            //exit(0); Use to terminate the app
-            //[self performSegueWithIdentifier:@"test" sender: self];
         }
-    }
+        
+        
+        if (global.initial_round){
+            [global.skippedWords addObject:[global.initialWords objectAtIndex:j]];    
+            [global.skippedAnswers addObject:[global.initialAnswers objectAtIndex:j]];  
+            //Prints out next word
+            j++;
+            global.index = j;
+            [self performSelectorOnMainThread:@selector(Word:) withObject:[global.initialWords objectAtIndex:j]waitUntilDone:NO];
+            
+            global.elements = [global.answerArray count];
+            global.array_index=j+1;
+            totalWORDS.text = [NSString stringWithFormat:@"%d / %u", global.array_index, global.elements];
+            
+            [self resetImage];
+            
+        } else if (global.skipped_round){
+            
+            
+        } else if (global.incorrect_round){
+            
+        }
+        
+    }//end outer else
 }
 
 //Displays if word was said correctly
@@ -800,7 +820,7 @@
         [global.easyWords addObject: trim];
         
         ///Checks if round 1 is over
-        if (global.initial_round_over){
+        if (global.initial_round){
             [global.skippedWords removeObjectAtIndex:j];
             [global.skippedAnswers removeObjectAtIndex:j];
         }
@@ -821,6 +841,19 @@
         x++;
     }//end if
     
+}
+
+
+- (void) enableButtons{
+    Pass.enabled = YES;
+    Peek.enabled = YES;
+    startButton.enabled = YES;
+}
+
+-(void) disableButtons{
+    Pass.enabled = NO;
+    Peek.enabled = NO;
+    startButton.enabled = NO;
 }
 
 /**************************** END FUNCTIONS **********************************/
@@ -881,22 +914,19 @@
 
     
     //Change up the arrays to accomodate the skipped and incorrect words
-    if (([global.skippedWords count] == 0) && ([global.troubledWords count] !=0)){
-        
-    } else if ([global.initialWords count] == 0){
-        test = global.skippedAnswers;
-        NSLog(@"InitialWord Array is EMPTY!");
-        global.initial_round_over = TRUE;
-//        NSLog(@"%@", global.initial_round_over);
-        NSLog(@"%d", global.initial_round_over);
-
-    } else {
+    if (global.initial_round){
         test = global.initialAnswers;
-        NSLog(@"InitialWord Array is not empty");
-//        NSLog(@"%@", global.initial_round_over);
-        NSLog(@"%d", global.initial_round_over);
+        NSLog(@"Initial Array");
+        
+    } else if (global.skipped_round){
+        test = global.skippedAnswers;
+        NSLog(@"Skipped Array");
+
+    } else if (global.incorrect_round){
+        test = global.troubledAnswers;
+        NSLog(@"Incorrect Array");
+
     }
-    
 //    NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$---------%@", global.index);
 //    NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$---------%@", j);
 
@@ -904,9 +934,7 @@
     hyp = [hypothesis UTF8String];
     
     printf("What you said: %s\n", hyp);
-
-//    while (([global.answerArray count]-1) != j){
-        
+    
     //If nothing was said or background noise heard
     if (hyp == NULL || strlen(hyp) <= 0)
     {
@@ -926,8 +954,6 @@
             NSLog(@"HYP: %s",hyp);
             
             tmp_word = [NSString stringWithFormat:@"%s", word];
-            
-        
          
             //Word answer
 //            NSString *trim = [[global.initialWords objectAtIndex:j] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -945,17 +971,7 @@
 //    }
 }
 
-- (void) enableButtons{
-    Pass.enabled = YES;
-    Peek.enabled = YES;
-    startButton.enabled = YES;
-}
 
--(void) disableButtons{
-    Pass.enabled = NO;
-    Peek.enabled = NO;
-    startButton.enabled = NO;
-}
 
 
 

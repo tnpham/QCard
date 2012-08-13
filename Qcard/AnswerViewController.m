@@ -40,7 +40,7 @@
     id str;
     NSLog(@"GLBOALLLLLLL INDEX %d", global.index);
     
-    if(global.initial_round_over != TRUE){
+    if(global.initial_round != TRUE){
         //Grabs the value at specified index in array
         str = [global.initialAnswers objectAtIndex: global.index];
         

@@ -182,7 +182,7 @@
             //passes the username and password to the server php pages to check valid user
             //NSString *url = [NSString stringWithFormat:@"https://129.128.136.143/moodle/local/phpFile.php?user=%@&pass=%@", username.text, password.text];  // server name does not match
             
-            NSString *url = [NSString stringWithFormat:@"https://%@/moodle/mod/qcardloader/infoControl.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
+            NSString *url = [NSString stringWithFormat:@"https://%@/moodle/mod/qcardloader/infoControl.php?user=%@&pass=%@&request=app", servername.text, username.text, password.text];  // server name does not match
             
             //NSString *url = [NSString stringWithFormat:@"https://%@/moodle/local/qcardloader/phpFile.php?user=%@&pass=%@", servername.text, username.text, password.text];  // server name does not match
 
@@ -307,44 +307,7 @@
                 NSLog(@"%i", [global.courseName count]);
 
                 NSLog(@"Contents of Dictionary: %@", global.courseName);
-
-            
-            //check if user is valid
-//            if ([[file objectAtIndex:0] isEqualToString: @"true"]){
-//                //Hide Loader
-//                [MBProgressHUD hideHUDForView:self.view animated:YES];
-//                
-//                //does not proceed since no files were found
-//                if ([[file objectAtIndex:1] isEqualToString: @"empty"]){
-//                    UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"No files found" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                    [alert1 show];
-//                    //checks if check box is checked
-//                    [self checked];
-//                    
-//                } else {
-//                    //Changes to the next view
-//                    [self performSegueWithIdentifier:@"validatedsegue" sender: self];
-//                    NSLog(@"Access Granted");
-//                    //checks if check box is checked
-//                    [self checked];
-//                }
-//                
-//            } else if ([[file objectAtIndex:0] isEqualToString: @"DNE"]){
-//                //Hide Loader
-//                [MBProgressHUD hideHUDForView:self.view animated:YES];
-//                
-//                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Username does not exist" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                [alert1 show];
-//                
-//            } else {
-//                //Hide Loader
-//                [MBProgressHUD hideHUDForView:self.view animated:YES];
-//
-//                //Alerts user something is wrong
-//                UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid username or password"delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                [alert1 show];
-//                NSLog(@"Invalid username or password");
-//            }
+                
         }
         
     //Displays error message when either username or password is invalid
@@ -380,21 +343,31 @@
 //Displays a message according to the outcome
 - (void) message: (NSString *) msg{
     UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"%@",msg] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert1 show];
+//    [alert1 show];
     
     UILabel *theBody = [alert1 valueForKey:@"_bodyTextLabel"];
     [theBody setTextColor:[UIColor orangeColor]];
     
-    UIImage *theImage = [UIImage imageNamed:@"oohoo1.png"];
+    UIImage *theImage = [UIImage imageNamed:@"blank.png"];
     theImage = [theImage stretchableImageWithLeftCapWidth:16 topCapHeight:16];
     CGSize theSize = [alert1 frame].size;
     
-    UIGraphicsBeginImageContext(theSize);
-    [theImage drawInRect:CGRectMake(0, 0, theSize.width, theSize.height)];
-    theImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+//    UIGraphicsBeginImageContext(theSize);
+//    [theImage drawInRect:CGRectMake(0, 0, theSize.width, theSize.height)];
+//    theImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
     
    // [[alert1 layer] setContents:[theImage CGImage]];
+    
+    //Add image to the alert background
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:theImage];
+    backgroundImageView.frame = CGRectMake(0, 0, 282, 100);
+    backgroundImageView.contentMode = UIViewContentModeScaleToFill;
+    
+    [alert1 addSubview:backgroundImageView];
+    [alert1 sendSubviewToBack:backgroundImageView];
+    [alert1 show];
+
 }
 
 

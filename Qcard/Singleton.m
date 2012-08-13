@@ -38,7 +38,9 @@ static Singleton *globalVar= nil;
 @synthesize elements;
 @synthesize array_index;
 
-@synthesize initial_round_over;
+@synthesize initial_round;
+@synthesize skipped_round;
+@synthesize incorrect_round;
 
 @synthesize serverName;
 

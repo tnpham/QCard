@@ -50,7 +50,9 @@
     //Current array index
     NSUInteger array_index;
     
-    BOOL initial_round_over;
+    BOOL initial_round;
+    BOOL skipped_round;
+    BOOL incorrect_round;
     
     NSString *serverName;
     
@@ -81,7 +83,9 @@
 @property (nonatomic) NSUInteger elements;
 @property (nonatomic) NSUInteger array_index;
 
-@property (nonatomic, assign) BOOL initial_round_over;
+@property (nonatomic, assign) BOOL initial_round;
+@property (nonatomic, assign) BOOL skipped_round;
+@property (nonatomic, assign) BOOL incorrect_round;
 
 @property (nonatomic, copy) NSString *serverName;
 
